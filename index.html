@@ -1,183 +1,126 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
->
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07111f">
-
-<meta
-    name="description"
-    content="我的课表 · 手机端个人课程表"
->
-
+<meta name="description" content="我的课表">
 <title>我的课表</title>
 
 <style>
-
-/* =========================================================
-   基础
-========================================================= */
+:root{
+    --bg:#07111f;
+    --bg2:#0b1728;
+    --card:rgba(18,32,52,.88);
+    --card2:rgba(25,43,68,.94);
+    --line:rgba(255,255,255,.08);
+    --text:#f5f8ff;
+    --muted:#8fa1ba;
+    --primary:#5b8cff;
+    --primary2:#765cff;
+    --green:#39d98a;
+    --shadow:0 18px 50px rgba(0,0,0,.28);
+}
 
 *{
     box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
 }
 
-html,
-body{
-    margin:0;
-    padding:0;
-    min-height:100%;
+html{
+    scroll-behavior:smooth;
 }
 
 body{
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Microsoft YaHei",
-        sans-serif;
-
-    color:#eef6ff;
-
-    background:
-        radial-gradient(
-            circle at 20% 0%,
-            rgba(56,189,248,.16),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at 100% 20%,
-            rgba(99,102,241,.13),
-            transparent 35%
-        ),
-        #07111f;
-
+    margin:0;
     min-height:100vh;
+    color:var(--text);
+    background:
+        radial-gradient(circle at 10% 0%,rgba(91,140,255,.18),transparent 30%),
+        radial-gradient(circle at 90% 5%,rgba(118,92,255,.14),transparent 30%),
+        linear-gradient(145deg,#050c17,#081321 55%,#07111f);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
 }
 
 button,
-input,
-textarea{
+textarea,
+input{
     font:inherit;
 }
 
 button{
+    border:0;
     cursor:pointer;
 }
 
-.hidden{
-    display:none !important;
-}
-
-
-/* =========================================================
-   背景装饰
-========================================================= */
-
-.bg-orb{
-    position:fixed;
-    width:260px;
-    height:260px;
-    border-radius:50%;
-    filter:blur(70px);
-    opacity:.18;
-    pointer-events:none;
-    z-index:0;
-}
-
-.bg-orb.one{
-    background:#38bdf8;
-    top:-100px;
-    left:-100px;
-}
-
-.bg-orb.two{
-    background:#8b5cf6;
-    right:-120px;
-    top:30%;
-}
-
-
-/* =========================================================
-   页面
-========================================================= */
-
-.page{
-    position:relative;
-    z-index:1;
-    min-height:100vh;
-}
-
-.container{
+.app{
     width:min(1500px,100%);
     margin:auto;
-    padding:18px;
+    padding:14px 10px 45px;
 }
 
-
-/* =========================================================
+/* =========================
    顶部
-========================================================= */
+========================= */
 
-.topbar{
+.header{
+    position:relative;
+    overflow:hidden;
+    margin-bottom:14px;
+    padding:20px;
+    border:1px solid var(--line);
+    border-radius:25px;
+    background:linear-gradient(
+        135deg,
+        rgba(31,54,87,.88),
+        rgba(11,24,41,.92)
+    );
+    box-shadow:var(--shadow);
+}
+
+.header-main{
+    position:relative;
     display:flex;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
     gap:15px;
-
-    margin-bottom:18px;
 }
 
-.brand{
+.logo-area{
     display:flex;
     align-items:center;
-    gap:12px;
+    gap:13px;
 }
 
-.brand-icon{
-    width:46px;
-    height:46px;
-
+.logo{
+    width:52px;
+    height:52px;
     display:flex;
     align-items:center;
     justify-content:center;
-
-    border-radius:15px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(56,189,248,.25),
-            rgba(99,102,241,.2)
-        );
-
-    border:1px solid rgba(255,255,255,.12);
-
-    box-shadow:
-        0 10px 35px rgba(0,0,0,.2);
-
+    border-radius:16px;
+    color:white;
     font-size:23px;
+    font-weight:900;
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary2)
+    );
 }
 
-.brand-title{
-    font-size:21px;
-    font-weight:800;
+.title{
+    margin:0;
+    font-size:24px;
 }
 
-.brand-subtitle{
-    margin-top:3px;
+.subtitle{
+    margin-top:5px;
+    color:var(--muted);
     font-size:12px;
-    color:#8ea5bd;
 }
 
-.top-actions{
+.header-actions{
     display:flex;
     gap:8px;
 }
@@ -185,1268 +128,1093 @@ button{
 .icon-btn{
     width:42px;
     height:42px;
-
-    border:1px solid rgba(255,255,255,.1);
-
     border-radius:13px;
+    color:white;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.07);
+}
 
-    background:rgba(255,255,255,.055);
+/* =========================
+   今日课程
+========================= */
 
-    color:#eaf4ff;
+.today-panel{
+    margin-bottom:14px;
+    padding:17px;
+    border:1px solid rgba(91,140,255,.22);
+    border-radius:21px;
+    background:linear-gradient(
+        135deg,
+        rgba(37,64,105,.92),
+        rgba(16,31,51,.94)
+    );
+    box-shadow:var(--shadow);
+}
 
+.today-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:13px;
+}
+
+.today-title{
+    display:flex;
+    align-items:center;
+    gap:8px;
     font-size:18px;
+    font-weight:900;
+}
 
+.today-dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 14px var(--green);
+}
+
+.today-info{
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* 纵向列表 */
+.today-list{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+/* 单门课程 */
+.today-course{
+    position:relative;
+    overflow:hidden;
     display:flex;
     align-items:center;
-    justify-content:center;
-}
-
-.icon-btn:active{
-    transform:scale(.95);
-}
-
-
-/* =========================================================
-   卡片
-========================================================= */
-
-.glass{
+    gap:12px;
+    min-height:76px;
+    padding:11px 13px 11px 16px;
+    border-radius:16px;
     background:
         linear-gradient(
             135deg,
-            rgba(255,255,255,.075),
-            rgba(255,255,255,.035)
+            rgba(255,255,255,.085),
+            rgba(255,255,255,.045)
         );
-
-    border:
-        1px solid rgba(255,255,255,.09);
-
+    border:1px solid rgba(255,255,255,.09);
     box-shadow:
-        0 20px 70px rgba(0,0,0,.22);
-
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-
-    border-radius:22px;
+        0 7px 20px rgba(0,0,0,.12),
+        inset 0 1px 0 rgba(255,255,255,.04);
+    cursor:pointer;
+    transition:
+        transform .18s ease,
+        background .18s ease,
+        border-color .18s ease;
 }
 
-
-/* =========================================================
-   导入页
-========================================================= */
-
-.import-page{
-    min-height:100vh;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    padding:25px;
+.today-course:before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:4px;
+    background:linear-gradient(
+        var(--primary),
+        var(--primary2)
+    );
 }
 
-.import-card{
-    width:min(600px,100%);
-    padding:30px;
+.today-course:active{
+    transform:scale(.985);
 }
 
-.import-icon{
-    width:72px;
-    height:72px;
-
-    border-radius:22px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:35px;
-
-    margin-bottom:20px;
-
+.today-course:hover{
     background:
         linear-gradient(
             135deg,
-            rgba(56,189,248,.2),
-            rgba(99,102,241,.18)
+            rgba(255,255,255,.105),
+            rgba(255,255,255,.055)
         );
-
-    border:1px solid rgba(255,255,255,.1);
+    border-color:rgba(255,255,255,.14);
 }
 
-.import-title{
-    font-size:29px;
-    font-weight:850;
-    margin-bottom:9px;
+/* 左侧节次 */
+.today-period-box{
+    flex:0 0 64px;
+    width:64px;
+    min-height:53px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+    background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.055);
 }
 
-.import-desc{
-    color:#91a7bd;
-    line-height:1.7;
+.today-period{
+    color:#dce7ff;
+    font-size:12px;
+    font-weight:900;
+    text-align:center;
+}
+
+.today-part{
+    margin-top:4px;
+    color:#8498b4;
+    font-size:10px;
+}
+
+/* 中间 */
+.today-course-content{
+    min-width:0;
+    flex:1;
+}
+
+.today-course-name{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    padding:0;
+    font-size:15px;
+    line-height:1.4;
+    font-weight:900;
+    color:#f5f8ff;
+}
+
+.today-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:7px;
+}
+
+.badge{
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    padding:4px 7px;
+    border-radius:7px;
+    background:rgba(255,255,255,.065);
+    color:#bfcde0;
+    font-size:10px;
+}
+
+/* 右侧 */
+.today-arrow{
+    flex:0 0 auto;
+    color:rgba(255,255,255,.3);
+    font-size:22px;
+    line-height:1;
+}
+
+.today-empty{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:65px;
+    padding:15px;
+    border-radius:15px;
+    color:var(--muted);
+    font-size:13px;
+    background:rgba(255,255,255,.035);
+    border:1px dashed rgba(255,255,255,.08);
+}
+
+/* =========================
+   教学周
+========================= */
+
+.week-panel{
+    margin-bottom:14px;
+    padding:13px;
+    border:1px solid var(--line);
+    border-radius:19px;
+    background:rgba(10,23,39,.8);
+}
+
+.week-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+.week-title strong{
     font-size:14px;
 }
 
-.import-tips{
-    margin-top:20px;
-    padding:15px;
-
-    border-radius:15px;
-
-    background:rgba(255,255,255,.04);
-
-    color:#9db0c3;
-
-    font-size:13px;
-    line-height:1.8;
-}
-
-.import-actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:20px;
-}
-
-.primary-btn,
-.secondary-btn{
-    min-height:48px;
-
-    border-radius:14px;
-
-    padding:0 17px;
-
-    border:1px solid rgba(255,255,255,.1);
-
-    font-weight:700;
-}
-
-.primary-btn{
-    color:#fff;
-
-    background:
-        linear-gradient(
-            135deg,
-            #1685c7,
-            #635bdb
-        );
-}
-
-.secondary-btn{
-    color:#e8f3ff;
-    background:rgba(255,255,255,.055);
-}
-
-.primary-btn:active,
-.secondary-btn:active{
-    transform:scale(.98);
-}
-
-
-/* =========================================================
-   主页面顶部信息
-========================================================= */
-
-.semester-card{
-    padding:18px 20px;
-    margin-bottom:14px;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
-}
-
-.semester-label{
-    color:#8197ad;
+.week-title span{
+    color:var(--muted);
     font-size:12px;
-    margin-bottom:4px;
 }
 
-.semester-name{
-    font-size:17px;
-    font-weight:750;
-}
-
-.week-now{
-    text-align:right;
-}
-
-.week-now-label{
-    color:#8197ad;
-    font-size:11px;
-}
-
-.week-now-number{
-    font-size:23px;
-    font-weight:850;
-}
-
-
-/* =========================================================
-   周次
-========================================================= */
-
-.week-card{
-    padding:13px;
-    margin-bottom:15px;
-}
-
-.week-list{
+.weeks{
     display:flex;
+    flex-wrap:nowrap;
     gap:7px;
     overflow-x:auto;
-
+    overflow-y:hidden;
+    padding:2px 1px 5px;
     scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+    touch-action:pan-x;
 }
 
-.week-list::-webkit-scrollbar{
+.weeks::-webkit-scrollbar{
     display:none;
 }
 
 .week-btn{
-    flex:0 0 auto;
-
-    border:1px solid rgba(255,255,255,.08);
-
-    color:#9cb1c6;
-
+    flex:0 0 43px;
+    width:43px;
+    min-width:43px;
+    height:38px;
+    border-radius:10px;
+    color:#91a4bd;
     background:rgba(255,255,255,.045);
-
-    border-radius:11px;
-
-    padding:9px 13px;
-
+    border:1px solid transparent;
     font-size:12px;
-    font-weight:650;
+}
+
+.week-btn.current{
+    color:#a9c1ff;
+    border-color:rgba(91,140,255,.4);
 }
 
 .week-btn.active{
-    color:#fff;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(56,189,248,.4),
-            rgba(99,102,241,.42)
-        );
-
-    border-color:
-        rgba(125,211,252,.3);
-
-    box-shadow:
-        0 5px 20px rgba(56,189,248,.12);
+    color:white;
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary2)
+    );
 }
 
-
-/* =========================================================
+/* =========================
    课表
-========================================================= */
+========================= */
 
-.schedule-card{
-    overflow:hidden;
-}
-
-.schedule-scroll{
-    width:100%;
+.schedule-wrap{
     overflow:auto;
+    border:1px solid var(--line);
+    border-radius:21px;
+    background:rgba(7,16,29,.75);
+    box-shadow:var(--shadow);
     -webkit-overflow-scrolling:touch;
 }
 
 .schedule{
-    border-collapse:collapse;
-
     width:100%;
     min-width:980px;
-
+    border-collapse:separate;
+    border-spacing:0;
     table-layout:fixed;
 }
 
 .schedule th,
 .schedule td{
-    border-right:
-        1px solid rgba(255,255,255,.055);
-
-    border-bottom:
-        1px solid rgba(255,255,255,.055);
-
-    padding:5px;
-
-    vertical-align:top;
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
 }
 
 .schedule thead th{
-    height:64px;
-
     position:sticky;
     top:0;
-    z-index:4;
-
-    background:
-        rgba(9,22,38,.94);
-
+    z-index:5;
+    height:62px;
+    background:rgba(11,24,41,.97);
     backdrop-filter:blur(15px);
-
-    text-align:center;
 }
 
 .schedule thead th:first-child{
-    width:70px;
-}
-
-.schedule tbody th{
-    width:70px;
-
-    text-align:center;
-
-    color:#8197ad;
-
-    background:
-        rgba(255,255,255,.025);
-
+    width:82px;
     position:sticky;
     left:0;
-    z-index:3;
+    z-index:8;
+}
+
+.day-head{
+    text-align:center;
 }
 
 .day-name{
-    font-weight:800;
+    color:white;
     font-size:14px;
+    font-weight:900;
 }
 
-.day-date{
-    margin-top:5px;
-    color:#7890a8;
+.date{
+    display:block;
+    margin-top:4px;
+    color:#7489a5;
     font-size:11px;
 }
 
-.period-number{
-    color:#dceaff;
-    font-size:14px;
-    font-weight:800;
+.day-head.today{
+    background:linear-gradient(
+        180deg,
+        rgba(91,140,255,.28),
+        rgba(91,140,255,.07)
+    );
+}
+
+.day-head.today .day-name{
+    color:#9eb9ff;
+}
+
+.period-cell{
+    width:82px;
+    min-width:82px;
+    position:sticky;
+    left:0;
+    z-index:4;
+    text-align:center;
+    background:rgba(9,20,34,.98);
+}
+
+.period-cell.part-start{
+    border-top:2px solid rgba(255,255,255,.1);
+}
+
+.period-num{
+    font-size:15px;
+    font-weight:900;
+}
+
+.period-part{
+    margin-top:4px;
+    color:#7187a3;
+    font-size:10px;
 }
 
 .schedule td{
     height:72px;
-    background:rgba(255,255,255,.012);
+    padding:5px;
+    vertical-align:top;
+    background:rgba(7,16,29,.44);
 }
 
+.schedule td.today-col{
+    background:rgba(91,140,255,.055);
+}
 
-/* =========================================================
-   课程卡片
-========================================================= */
-
-.course{
+.course-card{
+    position:relative;
     height:100%;
-    min-height:61px;
-
-    padding:9px;
-
-    margin:2px;
-
-    border-radius:12px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(37,99,235,.26),
-            rgba(14,116,144,.2)
-        );
-
-    border:
-        1px solid rgba(125,211,252,.14);
-
-    box-shadow:
-        0 6px 20px rgba(0,0,0,.15);
-
-    transition:.15s;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start;
+    min-height:60px;
+    overflow:hidden;
+    padding:10px 9px;
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:13px;
+    background:linear-gradient(
+        135deg,
+        rgba(49,82,137,.76),
+        rgba(35,50,79,.8)
+    );
+    box-shadow:0 7px 18px rgba(0,0,0,.15);
+    cursor:pointer;
 }
 
-.course:active{
-    transform:scale(.97);
+.course-card.today-highlight{
+    border-color:rgba(91,140,255,.8);
+    box-shadow:
+        0 0 0 1px rgba(91,140,255,.15),
+        0 8px 25px rgba(44,100,255,.24);
 }
 
 .course-name{
-    font-size:12px;
-    font-weight:800;
+    padding-right:18px;
+    font-size:13px;
     line-height:1.4;
-    color:#f1f8ff;
+    font-weight:900;
+}
+
+.course-teacher{
+    margin-top:6px;
+    color:#aebed4;
+    font-size:10px;
 }
 
 .course-room{
     margin-top:5px;
+    color:#d2def0;
     font-size:10px;
-    color:#a9d8ef;
-    line-height:1.35;
 }
 
-.course-teacher{
-    margin-top:3px;
-    font-size:10px;
-    color:#8ca6bd;
-}
-
-
-/* =========================================================
-   今日课程
-========================================================= */
-
-.today-card{
-    margin-top:15px;
-    padding:18px;
-}
-
-.section-title{
-    font-size:16px;
-    font-weight:800;
-    margin-bottom:3px;
-}
-
-.section-subtitle{
-    color:#71879d;
-    font-size:12px;
-    margin-bottom:13px;
-}
-
-.today-list{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-}
-
-.today-item{
-    display:flex;
-    align-items:center;
-    gap:13px;
-
-    padding:13px;
-
-    border-radius:14px;
-
-    background:rgba(255,255,255,.04);
-
-    border:1px solid rgba(255,255,255,.055);
-}
-
-.today-period{
-    min-width:54px;
-
-    color:#75d5ff;
-
-    font-size:11px;
-    font-weight:750;
-}
-
-.today-info{
-    min-width:0;
-}
-
-.today-course{
-    font-size:14px;
-    font-weight:750;
-}
-
-.today-room{
-    margin-top:4px;
-    color:#8198ae;
-    font-size:11px;
-}
-
-.empty{
-    padding:24px;
-    text-align:center;
-    color:#657b91;
-    font-size:13px;
-}
-
-
-/* =========================================================
-   模态框
-========================================================= */
+/* =========================
+   弹窗
+========================= */
 
 .modal-mask{
     position:fixed;
     inset:0;
-
     z-index:100;
-
-    display:flex;
-    align-items:center;
+    display:none;
+    align-items:flex-end;
     justify-content:center;
+    background:rgba(0,0,0,.65);
+    backdrop-filter:blur(8px);
+}
 
-    padding:18px;
-
-    background:
-        rgba(0,0,0,.62);
-
-    backdrop-filter:blur(10px);
-    -webkit-backdrop-filter:blur(10px);
+.modal-mask.show{
+    display:flex;
 }
 
 .modal{
-    width:min(650px,100%);
+    width:min(680px,100%);
     max-height:90vh;
     overflow:auto;
-
-    border-radius:22px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #101e30,
-            #0a1625
-        );
-
-    border:
-        1px solid rgba(255,255,255,.1);
-
-    box-shadow:
-        0 30px 100px rgba(0,0,0,.5);
-
     padding:20px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:25px 25px 0 0;
+    background:#0d1b2d;
+    box-shadow:0 -20px 70px rgba(0,0,0,.4);
+}
+
+.import-modal{
+    max-height:92vh;
 }
 
 .modal-header{
     display:flex;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
     gap:15px;
-
-    margin-bottom:15px;
+    margin-bottom:16px;
 }
 
 .modal-title{
-    font-size:18px;
-    font-weight:800;
+    font-size:19px;
+    font-weight:900;
 }
 
-.close-btn{
+.modal-subtitle{
+    margin-top:5px;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.5;
+}
+
+.close{
     width:38px;
     height:38px;
+    flex:0 0 38px;
+    border-radius:12px;
+    color:#cbd7e9;
+    background:rgba(255,255,255,.07);
+}
 
-    border-radius:11px;
+.detail-item{
+    padding:13px 0;
+    border-bottom:1px solid var(--line);
+}
 
-    border:1px solid rgba(255,255,255,.08);
+.detail-label{
+    margin-bottom:5px;
+    color:#7187a3;
+    font-size:11px;
+}
 
-    background:rgba(255,255,255,.05);
-
-    color:#dcecff;
+.detail-value{
+    color:#f2f6ff;
+    font-size:14px;
+    line-height:1.5;
 }
 
 textarea{
     width:100%;
-    min-height:280px;
-
+    min-height:270px;
+    margin-top:14px;
+    padding:12px;
     resize:vertical;
-
-    color:#eaf5ff;
-
-    background:#07111e;
-
-    border:
-        1px solid rgba(255,255,255,.1);
-
-    border-radius:15px;
-
     outline:none;
-
-    padding:14px;
-
-    line-height:1.55;
-
-    font-size:13px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    color:white;
+    background:rgba(255,255,255,.045);
 }
 
 textarea:focus{
-    border-color:
-        rgba(56,189,248,.45);
+    border-color:rgba(91,140,255,.55);
+    box-shadow:0 0 0 3px rgba(91,140,255,.08);
+}
+
+.file-import{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    min-height:46px;
+    margin-top:10px;
+    border-radius:13px;
+    color:#dce7fa;
+    background:rgba(255,255,255,.07);
+    border:1px solid var(--line);
+}
+
+.file-import:active{
+    transform:scale(.99);
 }
 
 .modal-actions{
     display:flex;
-    gap:9px;
-
+    gap:8px;
     margin-top:13px;
 }
 
 .modal-actions button{
     flex:1;
+    padding:12px;
+    border-radius:13px;
 }
 
-
-/* =========================================================
-   课程详情
-========================================================= */
-
-.detail-course-name{
-    font-size:22px;
-    font-weight:850;
-    line-height:1.4;
+.primary-btn{
+    color:white;
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary2)
+    );
 }
 
-.detail-code{
-    color:#718ba4;
-    font-size:11px;
-    margin-top:5px;
+.secondary-btn{
+    color:#cbd8ea;
+    background:rgba(255,255,255,.07);
 }
 
-.detail-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:9px;
-    margin-top:18px;
-}
-
-.detail-item{
-    padding:13px;
-
-    border-radius:14px;
-
-    background:rgba(255,255,255,.04);
-
-    border:1px solid rgba(255,255,255,.055);
-}
-
-.detail-label{
-    color:#71879d;
-    font-size:11px;
-    margin-bottom:5px;
-}
-
-.detail-value{
-    color:#e9f5ff;
-    font-size:13px;
-    font-weight:650;
-}
-
-
-/* =========================================================
-   设置
-========================================================= */
-
-.settings-list{
+.settings-backup{
     display:flex;
-    flex-direction:column;
-    gap:9px;
+    gap:8px;
+    margin-top:12px;
 }
 
-.setting-btn{
-    width:100%;
-
-    text-align:left;
-
-    padding:15px;
-
-    border-radius:14px;
-
-    border:1px solid rgba(255,255,255,.06);
-
-    background:rgba(255,255,255,.04);
-
-    color:#eaf5ff;
+.settings-backup button{
+    flex:1;
+    padding:11px;
+    border-radius:12px;
+    color:#cbd8ea;
+    background:rgba(255,255,255,.07);
 }
 
-.setting-btn strong{
-    display:block;
-    font-size:14px;
-}
-
-.setting-btn span{
-    display:block;
-    margin-top:4px;
-    color:#70869c;
-    font-size:11px;
-}
-
-
-/* =========================================================
+/* =========================
    Toast
-========================================================= */
+========================= */
 
 .toast{
     position:fixed;
-
     left:50%;
     bottom:25px;
-
-    transform:
-        translate(-50%,20px);
-
+    z-index:200;
+    transform:translate(-50%,20px);
     opacity:0;
-
     pointer-events:none;
-
-    z-index:500;
-
-    padding:11px 17px;
-
+    padding:11px 16px;
+    border:1px solid rgba(255,255,255,.1);
     border-radius:13px;
-
-    background:
-        rgba(14,28,45,.94);
-
-    border:
-        1px solid rgba(255,255,255,.1);
-
-    box-shadow:
-        0 15px 45px rgba(0,0,0,.35);
-
-    color:#eaf5ff;
-
-    font-size:12px;
-
+    color:white;
+    background:rgba(20,31,48,.97);
+    box-shadow:var(--shadow);
+    font-size:13px;
     transition:.25s;
 }
 
 .toast.show{
     opacity:1;
-
-    transform:
-        translate(-50%,0);
+    transform:translate(-50%,0);
 }
 
-
-/* =========================================================
-   移动端
-========================================================= */
+/* =========================
+   手机
+========================= */
 
 @media(max-width:700px){
 
-    .container{
-        padding:11px;
+    .app{
+        padding:9px 7px 35px;
     }
 
-    .brand-title{
-        font-size:18px;
+    .header{
+        padding:17px;
     }
 
-    .brand-subtitle{
-        font-size:10px;
-    }
-
-    .brand-icon{
-        width:41px;
-        height:41px;
-        border-radius:13px;
+    .logo{
+        width:46px;
+        height:46px;
         font-size:20px;
     }
 
-    .semester-card{
-        padding:15px;
+    .title{
+        font-size:21px;
     }
 
-    .semester-name{
+    /* 今日课程保持纵向 */
+    .today-list{
+        display:flex;
+        flex-direction:column;
+        overflow:visible;
+    }
+
+    .today-course{
+        width:100%;
+        min-width:0;
+    }
+
+}
+
+@media(max-width:430px){
+
+    .today-top{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .today-info{
+        padding-left:18px;
+    }
+
+    .today-course{
+        gap:9px;
+        padding:10px 10px 10px 13px;
+    }
+
+    .today-period-box{
+        flex-basis:58px;
+        width:58px;
+    }
+
+    .today-course-name{
         font-size:14px;
     }
 
-    .week-card{
-        border-radius:17px;
+    .today-meta{
+        gap:4px;
     }
 
-    .schedule-card{
-        border-radius:17px;
+    .badge{
+        font-size:9px;
+        padding:4px 6px;
     }
 
-    .today-card{
-        border-radius:17px;
+    .modal{
+        padding:17px;
     }
 
-    .import-card{
-        padding:23px;
-    }
-
-    .import-title{
-        font-size:25px;
-    }
-
-    .import-actions{
-        grid-template-columns:1fr;
-    }
-
-    .detail-grid{
-        grid-template-columns:1fr 1fr;
+    textarea{
+        min-height:240px;
     }
 
 }
-
-
-/* =========================================================
-   很小屏幕
-========================================================= */
-
-@media(max-width:380px){
-
-    .detail-grid{
-        grid-template-columns:1fr;
-    }
-
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="bg-orb one"></div>
-<div class="bg-orb two"></div>
+<div class="app">
 
+<header class="header">
 
-<!-- =======================================================
-     导入页面
-======================================================= -->
+    <div class="header-main">
 
-<section
-    id="importPage"
-    class="page import-page"
->
+        <div class="logo-area">
 
-    <div class="glass import-card">
+            <div class="logo">课</div>
 
-        <div class="import-icon">
-            📚
-        </div>
+            <div>
 
-        <div class="import-title">
-            我的课表
-        </div>
+                <h1 class="title">
+                    我的课表
+                </h1>
 
-        <div class="import-desc">
-            把教务系统中的「我的课表」复制下来，
-            粘贴到这里，即可自动生成手机课表。
-        </div>
+                <div class="subtitle">
+                    2026-2027 学年第一学期
+                </div>
 
-        <div class="import-tips">
-
-            <b>导入方法</b><br>
-
-            ① 打开学校教务系统 → 我的课表<br>
-
-            ② 选择「全部教学周」<br>
-
-            ③ 复制整个课表页面文字<br>
-
-            ④ 点击下面的「粘贴课表」<br>
-
-            ⑤ 点击「生成我的课表」
+            </div>
 
         </div>
 
-        <div class="import-actions">
+        <div class="header-actions">
 
             <button
-                id="pasteBtn"
-                class="primary-btn"
+                class="icon-btn"
+                onclick="openSettings()"
+                aria-label="设置"
             >
-                📋 粘贴课表
+                ⚙
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================
+     今日课程
+========================= -->
+
+<section class="today-panel">
+
+    <div class="today-top">
+
+        <div class="today-title">
+
+            <span class="today-dot"></span>
+
+            今日课程
+
+        </div>
+
+        <div
+            class="today-info"
+            id="todayInfo"
+        ></div>
+
+    </div>
+
+    <div
+        class="today-list"
+        id="todayList"
+    ></div>
+
+</section>
+
+
+<!-- =========================
+     教学周
+========================= -->
+
+<section class="week-panel">
+
+    <div class="week-title">
+
+        <strong>教学周</strong>
+
+        <span id="weekText"></span>
+
+    </div>
+
+    <div
+        class="weeks"
+        id="weeks"
+    ></div>
+
+</section>
+
+
+<!-- =========================
+     课表
+========================= -->
+
+<section class="schedule-wrap">
+
+<table class="schedule">
+
+<thead>
+
+<tr>
+
+    <th>节次</th>
+
+    <th id="dayHead1"></th>
+    <th id="dayHead2"></th>
+    <th id="dayHead3"></th>
+    <th id="dayHead4"></th>
+    <th id="dayHead5"></th>
+    <th id="dayHead6"></th>
+    <th id="dayHead7"></th>
+
+</tr>
+
+</thead>
+
+<tbody id="scheduleBody"></tbody>
+
+</table>
+
+</section>
+
+</div>
+
+
+<!-- =========================
+     导入课表
+========================= -->
+
+<div
+    class="modal-mask"
+    id="importModal"
+>
+
+<div class="modal import-modal">
+
+    <div class="modal-header">
+
+        <div>
+
+            <div class="modal-title">
+                导入教务系统课表
+            </div>
+
+            <div class="modal-subtitle">
+                粘贴完整课表，或直接选择课表文件
+            </div>
+
+        </div>
+
+        <button
+            class="close"
+            onclick="closeImportModal()"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div class="detail-item">
+
+        <div class="detail-label">
+            使用方法
+        </div>
+
+        <div class="detail-value">
+            在教务系统选择「全部教学周」，
+            复制完整课表后粘贴到下面。
+        </div>
+
+    </div>
+
+
+    <textarea
+        id="scheduleInput"
+        placeholder="把教务系统复制出来的完整课表粘贴到这里……"
+    ></textarea>
+
+
+    <label
+        class="file-import"
+        for="scheduleFile"
+    >
+        📂 选择课表文件
+    </label>
+
+    <input
+        id="scheduleFile"
+        type="file"
+        accept=".txt,.html,.htm,.csv"
+        hidden
+        onchange="readScheduleFile(event)"
+    >
+
+
+    <div class="modal-actions">
+
+        <button
+            class="secondary-btn"
+            onclick="closeImportModal()"
+        >
+            取消
+        </button>
+
+        <button
+            class="primary-btn"
+            onclick="importScheduleText()"
+        >
+            解析并导入
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     课程详情
+========================= -->
+
+<div
+    class="modal-mask"
+    id="detailModal"
+>
+
+<div class="modal">
+
+    <div class="modal-header">
+
+        <div class="modal-title">
+            课程详情
+        </div>
+
+        <button
+            class="close"
+            onclick="closeModal('detailModal')"
+        >
+            ×
+        </button>
+
+    </div>
+
+    <div id="courseDetail"></div>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     设置
+========================= -->
+
+<div
+    class="modal-mask"
+    id="settingsModal"
+>
+
+<div class="modal">
+
+    <div class="modal-header">
+
+        <div class="modal-title">
+            设置
+        </div>
+
+        <button
+            class="close"
+            onclick="closeModal('settingsModal')"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div class="detail-item">
+
+        <div class="detail-label">
+            第一周基准
+        </div>
+
+        <div class="detail-value">
+            2026年9月1日
+        </div>
+
+    </div>
+
+
+    <div class="detail-item">
+
+        <div class="detail-label">
+            日期
+        </div>
+
+        <div class="detail-value">
+            第3周星期二 = 2026年9月15日
+        </div>
+
+    </div>
+
+
+    <div class="detail-item">
+
+        <div class="detail-label">
+            节次
+        </div>
+
+        <div class="detail-value">
+            1–4节：上午<br>
+            5–8节：下午<br>
+            9–12节：晚上
+        </div>
+
+    </div>
+
+
+    <div class="detail-item">
+
+        <div class="detail-label">
+            课表数据
+        </div>
+
+        <div class="detail-value">
+            备份和恢复功能放在设置中，不占用主界面。
+        </div>
+
+        <div class="settings-backup">
+
+            <button onclick="exportJSON()">
+                💾 备份
             </button>
 
             <button
-                id="fileImportBtn"
-                class="secondary-btn"
+                onclick="document.getElementById('backupFile').click()"
             >
-                📄 导入文件
+                📂 恢复
             </button>
 
         </div>
 
         <input
-            id="fileInput"
+            id="backupFile"
             type="file"
-            accept=".txt,.html,.htm"
+            accept=".json"
             hidden
+            onchange="importJSON(event)"
         >
 
     </div>
 
-</section>
 
+    <div class="modal-actions">
 
-<!-- =======================================================
-     主页面
-======================================================= -->
-
-<section
-    id="mainPage"
-    class="page hidden"
->
-
-<div class="container">
-
-    <div class="topbar">
-
-        <div class="brand">
-
-            <div class="brand-icon">
-                📚
-            </div>
-
-            <div>
-
-                <div class="brand-title">
-                    我的课表
-                </div>
-
-                <div class="brand-subtitle">
-                    手机端个人课程表
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="top-actions">
-
-            <button
-                id="settingsBtn"
-                class="icon-btn"
-                title="设置"
-            >
-                ⚙️
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <div class="glass semester-card">
-
-        <div>
-
-            <div class="semester-label">
-                当前学期
-            </div>
-
-            <div
-                id="semesterText"
-                class="semester-name"
-            >
-                2026-2027学年1学期
-            </div>
-
-        </div>
-
-        <div class="week-now">
-
-            <div class="week-now-label">
-                当前周
-            </div>
-
-            <div
-                id="currentWeekNumber"
-                class="week-now-number"
-            >
-                --
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="glass week-card">
-
-        <div
-            id="weekList"
-            class="week-list"
-        ></div>
-
-    </div>
-
-
-    <div class="glass schedule-card">
-
-        <div class="schedule-scroll">
-
-            <table class="schedule">
-
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            节次
-                        </th>
-
-                        <th data-day="1">
-                            星期一
-                        </th>
-
-                        <th data-day="2">
-                            星期二
-                        </th>
-
-                        <th data-day="3">
-                            星期三
-                        </th>
-
-                        <th data-day="4">
-                            星期四
-                        </th>
-
-                        <th data-day="5">
-                            星期五
-                        </th>
-
-                        <th data-day="6">
-                            星期六
-                        </th>
-
-                        <th data-day="7">
-                            星期日
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="scheduleBody"></tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-
-    <div class="glass today-card">
-
-        <div class="section-title">
-            今日课程
-        </div>
-
-        <div
-            id="todayDate"
-            class="section-subtitle"
+        <button
+            class="secondary-btn"
+            onclick="clearAllData()"
         >
-            --
-        </div>
+            清空课表
+        </button>
 
-        <div
-            id="todayList"
-            class="today-list"
-        ></div>
-
-    </div>
-
-
-</div>
-
-</section>
-
-
-<!-- =======================================================
-     粘贴窗口
-======================================================= -->
-
-<div
-    id="pasteModal"
-    class="modal-mask hidden"
->
-
-    <div class="modal">
-
-        <div class="modal-header">
-
-            <div class="modal-title">
-                粘贴教务系统课表
-            </div>
-
-            <button
-                id="closePasteBtn"
-                class="close-btn"
-            >
-                ×
-            </button>
-
-        </div>
-
-        <textarea
-            id="pasteText"
-            placeholder="请把教务系统「我的课表」页面复制的全部文字粘贴到这里……"
-        ></textarea>
-
-        <div class="modal-actions">
-
-            <button
-                id="cancelPasteBtn"
-                class="secondary-btn"
-            >
-                取消
-            </button>
-
-            <button
-                id="generateBtn"
-                class="primary-btn"
-            >
-                ✨ 生成我的课表
-            </button>
-
-        </div>
+        <button
+            class="primary-btn"
+            onclick="closeModal('settingsModal')"
+        >
+            完成
+        </button>
 
     </div>
 
 </div>
 
-
-<!-- =======================================================
-     课程详情
-======================================================= -->
-
-<div
-    id="detailModal"
-    class="modal-mask hidden"
->
-
-    <div class="modal">
-
-        <div class="modal-header">
-
-            <div class="modal-title">
-                课程详情
-            </div>
-
-            <button
-                id="closeDetailBtn"
-                class="close-btn"
-            >
-                ×
-            </button>
-
-        </div>
-
-        <div id="detailContent"></div>
-
-    </div>
-
 </div>
 
 
-<!-- =======================================================
-     设置
-======================================================= -->
-
 <div
-    id="settingsModal"
-    class="modal-mask hidden"
->
-
-    <div class="modal">
-
-        <div class="modal-header">
-
-            <div class="modal-title">
-                设置
-            </div>
-
-            <button
-                id="closeSettingsBtn"
-                class="close-btn"
-            >
-                ×
-            </button>
-
-        </div>
-
-        <div class="settings-list">
-
-            <button
-                id="exportBtn"
-                class="setting-btn"
-            >
-                <strong>
-                    📦 导出课表备份
-                </strong>
-
-                <span>
-                    保存为 JSON 文件
-                </span>
-            </button>
-
-
-            <button
-                id="backupBtn"
-                class="setting-btn"
-            >
-                <strong>
-                    ♻️ 恢复课表
-                </strong>
-
-                <span>
-                    从 JSON 备份恢复
-                </span>
-            </button>
-
-            <input
-                id="backupInput"
-                type="file"
-                accept=".json"
-                hidden
-            >
-
-
-            <button
-                id="reimportBtn"
-                class="setting-btn"
-            >
-                <strong>
-                    📋 重新导入课表
-                </strong>
-
-                <span>
-                    清空当前数据并重新粘贴
-                </span>
-            </button>
-
-
-            <button
-                id="resetBtn"
-                class="setting-btn"
-            >
-                <strong>
-                    🗑️ 清除当前课表
-                </strong>
-
-                <span>
-                    删除本机保存的课表数据
-                </span>
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =======================================================
-     Toast
-======================================================= -->
-
-<div
-    id="toast"
     class="toast"
+    id="toast"
 ></div>
 
 
 <script>
 
-/* =========================================================
-   配置
-========================================================= */
-
-const STORAGE_KEY =
-    "my_schedule_v10";
+/* =========================
+   基础配置
+========================= */
 
 const semesterStart =
-    new Date(
-        "2026-09-07T00:00:00"
-    );
+    new Date("2026-09-01T00:00:00");
 
-const DAYS = [
+const STORAGE_KEY =
+    "shuoce_schedule_v8";
+
+const DAY_NAMES = [
     "星期一",
     "星期二",
     "星期三",
@@ -1456,1093 +1224,116 @@ const DAYS = [
     "星期日"
 ];
 
-const chineseNumbers = {
-
-    "1":"一",
-    "2":"二",
-    "3":"三",
-    "4":"四",
-    "5":"五",
-    "6":"六",
-    "7":"七",
-    "8":"八",
-    "9":"九"
-
+const CN_PERIOD = {
+    "一":1,
+    "二":2,
+    "三":3,
+    "四":4,
+    "五":5,
+    "六":6,
+    "七":7,
+    "八":8,
+    "九":9,
+    "十":10,
+    "十一":11,
+    "十二":12
 };
 
-let scheduleData = [];
+let courses = [];
 
-let currentWeek =
+let selectedWeek =
     getCurrentWeek();
 
 
-/* =========================================================
+/* =========================
    HTML 转义
-========================================================= */
+========================= */
 
 function escapeHTML(value){
 
-    return String(
-        value ?? ""
-    )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
 }
 
 
-/* =========================================================
-   当前周
-========================================================= */
+/* =========================
+   周次
+========================= */
 
 function getCurrentWeek(){
 
-    const now =
-        new Date();
+    const now = new Date();
+
+    const today = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+    );
+
+    const start = new Date(
+        semesterStart.getFullYear(),
+        semesterStart.getMonth(),
+        semesterStart.getDate()
+    );
 
     const diff =
-        now.getTime() -
-        semesterStart.getTime();
-
-    const week =
         Math.floor(
-            diff /
-            (
-                7 *
-                24 *
-                60 *
-                60 *
-                1000
-            )
-        ) + 1;
+            (today - start) / 86400000
+        );
 
-    return Math.max(
-        1,
-        Math.min(
-            18,
-            week
-        )
-    );
+    if(diff < 0){
+        return 1;
+    }
+
+    return Math.floor(diff / 7) + 1;
 
 }
 
 
-/* =========================================================
-   房间名称
-========================================================= */
+function getWeekMonday(week){
 
-function getRoomName(room){
+    const base = new Date(
+        semesterStart.getFullYear(),
+        semesterStart.getMonth(),
+        semesterStart.getDate()
+    );
 
-    if(!room){
+    const day = base.getDay();
 
-        return "未设置";
+    const offset =
+        day === 0
+            ? -6
+            : 1 - day;
 
-    }
+    base.setDate(
+        base.getDate() +
+        offset +
+        (week - 1) * 7
+    );
 
-    room =
-        String(room)
-        .trim();
+    base.setHours(0,0,0,0);
 
-
-    let match =
-        room.match(
-            /^(x\d+)\(x\d+$/i
-        );
-
-    if(match){
-
-        room =
-            match[1];
-
-    }
-
-
-    /*
-       先处理完整名称：
-
-       电气传动实训室
-       可编程控制器实训室
-       工业机器人综合应用实训室
-       体育场
-    */
-
-    if(
-        room.includes("实训室") ||
-        room.includes("实验室") ||
-        room.includes("体育场")
-    ){
-
-        return room;
-
-    }
-
-
-    if(
-        room.startsWith("x体育场")
-    ){
-
-        return "体育场";
-
-    }
-
-
-    /*
-       x1201 → 一教201
-       x2213 → 二教213
-    */
-
-    match =
-        room.match(
-            /^x(\d)(\d{3})$/i
-        );
-
-    if(match){
-
-        return (
-            chineseNumbers[
-                match[1]
-            ] ||
-            match[1]
-        ) +
-        "教" +
-        match[2];
-
-    }
-
-
-    /*
-       xs1203 → 203
-       xs1204-2 → 204
-       xs1102-1 → 102
-    */
-
-    match =
-        room.match(
-            /^xs\d(\d{3})(?:-\d+)?$/i
-        );
-
-    if(match){
-
-        return match[1];
-
-    }
-
-
-    return room;
+    return base;
 
 }
 
 
-/* =========================================================
-   周次解析
-========================================================= */
+function getDateForDay(week,day){
 
-function parseWeeks(text){
-
-    if(!text){
-
-        return [];
-
-    }
-
-    text =
-        String(text)
-        .replace(/第/g,"")
-        .replace(/周/g,"")
-        .trim();
-
-
-    const result = [];
-
-
-    const parts =
-        text.split(
-            /[\s,，、]+/
-        );
-
-
-    parts.forEach(
-        part => {
-
-            part =
-                part.trim();
-
-
-            if(!part){
-
-                return;
-
-            }
-
-
-            const range =
-                part.match(
-                    /^(\d+)\s*-\s*(\d+)$/
-                );
-
-
-            if(range){
-
-                let start =
-                    Number(range[1]);
-
-                let end =
-                    Number(range[2]);
-
-
-                if(start > end){
-
-                    [
-                        start,
-                        end
-                    ] =
-                    [
-                        end,
-                        start
-                    ];
-
-                }
-
-
-                for(
-                    let i=start;
-                    i<=end;
-                    i++
-                ){
-
-                    if(
-                        i >= 1 &&
-                        i <= 18 &&
-                        !result.includes(i)
-                    ){
-
-                        result.push(i);
-
-                    }
-
-                }
-
-                return;
-
-            }
-
-
-            const n =
-                Number(
-                    part.replace(
-                        /[^0-9]/g,
-                        ""
-                    )
-                );
-
-
-            if(
-                n >= 1 &&
-                n <= 18 &&
-                !result.includes(n)
-            ){
-
-                result.push(n);
-
-            }
-
-        }
-    );
-
-
-    return result.sort(
-        (a,b) => a-b
-    );
-
-}
-
-
-/* =========================================================
-   创建课程
-========================================================= */
-
-function createCourse(
-    day,
-    start,
-    name,
-    code,
-    teacher,
-    weeks,
-    room
-){
-
-    return {
-
-        id:
-            Date.now() +
-            "_" +
-            Math.random()
-            .toString(36)
-            .slice(2),
-
-        day:
-            Number(day),
-
-        start:
-            Number(start),
-
-        /*
-           你的课表通常两节连续：
-
-           第1-2节
-           第3-4节
-           第5-6节
-           ...
-
-           所以课程块默认占两节。
-
-           注意：
-           这里没有任何“几点上课”的假设。
-        */
-
-        end:
-            Math.min(
-                12,
-                Number(start) + 1
-            ),
-
-        name:
-            String(
-                name || ""
-            ).trim(),
-
-        code:
-            String(
-                code || ""
-            ).trim(),
-
-        teacher:
-            String(
-                teacher || ""
-            ).trim(),
-
-        weeks:
-            Array.isArray(weeks)
-            ? weeks
-            : [],
-
-        room:
-            String(
-                room || ""
-            ).trim()
-
-    };
-
-}
-
-
-/* =========================================================
-   找课程头
-========================================================= */
-
-const COURSE_HEADER =
-    /([^()\t\r\n]+?)\(([A-Za-z0-9]+\.[A-Za-z0-9]+)\)\s*\(([^()\r\n]*)\)/g;
-
-
-function findCourseHeaders(text){
-
-    const result = [];
-
-
-    COURSE_HEADER.lastIndex = 0;
-
-
-    let match;
-
-
-    while(
-        (
-            match =
-            COURSE_HEADER.exec(text)
-        ) !== null
-    ){
-
-        result.push({
-
-            name:
-                match[1].trim(),
-
-            code:
-                match[2].trim(),
-
-            teacher:
-                match[3].trim(),
-
-            index:
-                match.index,
-
-            end:
-                COURSE_HEADER.lastIndex
-
-        });
-
-    }
-
-
-    return result;
-
-}
-
-
-/* =========================================================
-   房间解析
-========================================================= */
-
-function parseLocation(text){
-
-    if(!text){
-
-        return {
-            weeks:[],
-            room:""
-        };
-
-    }
-
-
-    const match =
-        text.match(
-            /\(\s*([0-9][0-9\s,\-]*)\s*,\s*([\s\S]*)/
-        );
-
-
-    if(!match){
-
-        return {
-            weeks:[],
-            room:""
-        };
-
-    }
-
-
-    const weekText =
-        match[1].trim();
-
-
-    let room =
-        match[2].trim();
-
-
-    room =
-        room.replace(
-            /\)+$/g,
-            ""
-        );
-
-
-    let duplicate =
-        room.match(
-            /^(x\d+)\(x\d+$/i
-        );
-
-
-    if(duplicate){
-
-        room =
-            duplicate[1];
-
-    }
-
-
-    room =
-        room.replace(
-            /^x体育场\(x体育场$/i,
-            "x体育场"
-        );
-
-
-    room =
-        room.replace(
-            /(实训室|实验室)\(xs\d+(?:-\d+)?$/i,
-            "$1"
-        );
-
-
-    return {
-
-        weeks:
-            parseWeeks(
-                weekText
-            ),
-
-        room:
-            room
-
-    };
-
-}
-
-
-/* =========================================================
-   单元格课程解析
-========================================================= */
-
-function parseCell(
-    cellText,
-    day,
-    period
-){
-
-    if(
-        !cellText ||
-        !cellText.trim()
-    ){
-
-        return [];
-
-    }
-
-
-    const text =
-        String(cellText)
-        .replace(
-            /\r/g,
-            ""
-        )
-        .replace(
-            /\n+/g,
-            " "
-        )
-        .replace(
-            /\s{2,}/g,
-            " "
-        )
-        .trim();
-
-
-    const headers =
-        findCourseHeaders(text);
-
-
-    if(
-        headers.length === 0
-    ){
-
-        return [];
-
-    }
-
-
-    const result = [];
-
-
-    headers.forEach(
-        (
-            header,
-            index
-        ) => {
-
-            const next =
-                headers[index + 1];
-
-
-            const end =
-                next
-                ? next.index
-                : text.length;
-
-
-            const after =
-                text.slice(
-                    header.end,
-                    end
-                );
-
-
-            const location =
-                parseLocation(
-                    after
-                );
-
-
-            let weeks =
-                location.weeks;
-
-
-            if(
-                weeks.length === 0
-            ){
-
-                weeks =
-                    Array.from(
-                        {
-                            length:18
-                        },
-                        (_,i) =>
-                            i + 1
-                    );
-
-            }
-
-
-            result.push(
-                createCourse(
-                    day,
-                    period,
-                    header.name,
-                    header.code,
-                    header.teacher,
-                    weeks,
-                    location.room
-                )
-            );
-
-        }
-    );
-
-
-    return result;
-
-}
-
-
-/* =========================================================
-   核心课表解析器
-========================================================= */
-
-function parseSchoolSchedule(text){
-
-    if(!text){
-
-        return [];
-
-    }
-
-
-    text =
-        String(text)
-        .replace(
-            /\r\n/g,
-            "\n"
-        )
-        .replace(
-            /\r/g,
-            "\n"
-        );
-
-
-    const tableStart =
-        text.indexOf(
-            "节次/周次"
-        );
-
-
-    if(
-        tableStart >= 0
-    ){
-
-        text =
-            text.slice(
-                tableStart
-            );
-
-    }
-
-
-    const periodRegex =
-        /^第\s*(一|二|三|四|五|六|七|八|九|十|十一|十二|1[0-2]|[1-9])\s*节/gm;
-
-
-    const blocks = [];
-
-
-    let match;
-
-
-    while(
-        (
-            match =
-            periodRegex.exec(text)
-        ) !== null
-    ){
-
-        let raw =
-            match[1];
-
-
-        let period;
-
-
-        if(
-            /^\d+$/.test(raw)
-        ){
-
-            period =
-                Number(raw);
-
-        }else{
-
-            const map = {
-
-                "一":1,
-                "二":2,
-                "三":3,
-                "四":4,
-                "五":5,
-                "六":6,
-                "七":7,
-                "八":8,
-                "九":9,
-                "十":10,
-                "十一":11,
-                "十二":12
-
-            };
-
-            period =
-                map[raw];
-
-        }
-
-
-        blocks.push({
-
-            period,
-
-            start:
-                match.index,
-
-            end:
-                periodRegex.lastIndex
-
-        });
-
-    }
-
-
-    console.log(
-        "识别到节次:",
-        blocks.map(
-            x => x.period
-        )
-    );
-
-
-    if(
-        blocks.length === 0
-    ){
-
-        return [];
-
-    }
-
-
-    const result = [];
-
-
-    blocks.forEach(
-        (
-            block,
-            index
-        ) => {
-
-            const next =
-                blocks[index + 1];
-
-
-            const blockEnd =
-                next
-                ? next.start
-                : text.length;
-
-
-            let content =
-                text.slice(
-                    block.end,
-                    blockEnd
-                );
-
-
-            if(
-                content.startsWith("\t")
-            ){
-
-                content =
-                    content.slice(1);
-
-            }
-
-
-            /*
-               非常重要：
-
-               必须保留空 TAB。
-            */
-
-            const cells =
-                content.split("\t");
-
-
-            console.log(
-                `第${block.period}节列数:`,
-                cells.length
-            );
-
-
-            for(
-                let day=1;
-                day<=7;
-                day++
-            ){
-
-                const cell =
-                    cells[day - 1] || "";
-
-
-                if(
-                    !cell.trim()
-                ){
-
-                    continue;
-
-                }
-
-
-                const courses =
-                    parseCell(
-                        cell,
-                        day,
-                        block.period
-                    );
-
-
-                result.push(
-                    ...courses
-                );
-
-            }
-
-        }
-    );
-
-
-    return mergeCourses(
-        result
-    );
-
-}
-
-
-/* =========================================================
-   合并重复课程
-========================================================= */
-
-function mergeCourses(list){
-
-    const map =
-        new Map();
-
-
-    list.forEach(
-        course => {
-
-            const key =
-                [
-                    course.day,
-                    course.start,
-                    course.name,
-                    course.code,
-                    course.teacher,
-                    course.room
-                ].join("|");
-
-
-            if(
-                !map.has(key)
-            ){
-
-                map.set(
-                    key,
-                    {
-                        ...course,
-                        weeks:[
-                            ...course.weeks
-                        ]
-                    }
-                );
-
-            }else{
-
-                const old =
-                    map.get(key);
-
-
-                course.weeks.forEach(
-                    week => {
-
-                        if(
-                            !old.weeks.includes(week)
-                        ){
-
-                            old.weeks.push(week);
-
-                        }
-
-                    }
-                );
-
-            }
-
-        }
-    );
-
-
-    return Array
-        .from(map.values())
-        .map(
-            course => {
-
-                course.weeks.sort(
-                    (a,b) => a-b
-                );
-
-                return course;
-
-            }
-        );
-
-}
-
-
-/* =========================================================
-   导入课表
-========================================================= */
-
-function importScheduleText(text){
-
-    console.clear();
-
-    console.log(
-        "========== 课表导入 =========="
-    );
-
-    console.log(
-        "文本长度:",
-        text.length
-    );
-
-    console.log(
-        "TAB数量:",
-        (
-            text.match(/\t/g) || []
-        ).length
-    );
-
-
-    const courses =
-        parseSchoolSchedule(
-            text
-        );
-
-
-    console.log(
-        "最终课程数量:",
-        courses.length
-    );
-
-
-    if(
-        courses.length === 0
-    ){
-
-        toast(
-            "未识别到课表，请确认复制的是整个课表"
-        );
-
-        return false;
-
-    }
-
-
-    scheduleData =
-        courses;
-
-
-    saveData();
-
-
-    showMainPage();
-
-
-    toast(
-        `成功识别 ${courses.length} 个课程安排`
-    );
-
-
-    return true;
-
-}
-
-
-/* =========================================================
-   获取课程
-========================================================= */
-
-function getCourses(
-    week,
-    day
-){
-
-    return scheduleData
-        .filter(
-            course =>
-                Number(course.day) === Number(day) &&
-                Array.isArray(course.weeks) &&
-                course.weeks.includes(Number(week))
-        )
-        .sort(
-            (a,b) =>
-                a.start - b.start
-        );
-
-}
-
-
-/* =========================================================
-   日期
-========================================================= */
-
-function getDateForDay(
-    week,
-    day
-){
+    const monday =
+        getWeekMonday(week);
 
     const date =
-        new Date(
-            semesterStart
-        );
-
+        new Date(monday);
 
     date.setDate(
-        date.getDate() +
-        (week - 1) * 7 +
-        (day - 1)
+        monday.getDate() + day - 1
     );
-
 
     return date;
 
@@ -2551,34 +1342,1051 @@ function getDateForDay(
 
 function formatDate(date){
 
-    return (
-        date.getMonth() + 1
-    ) +
-    "/" +
-    date.getDate();
+    return `${
+        date.getMonth()+1
+    }月${
+        date.getDate()
+    }日`;
 
 }
 
 
-/* =========================================================
-   周次
-========================================================= */
+function getDayNumber(date=new Date()){
+
+    const day =
+        date.getDay();
+
+    return day === 0
+        ? 7
+        : day;
+
+}
+
+
+function getPart(period){
+
+    if(period <= 4){
+        return "上午";
+    }
+
+    if(period <= 8){
+        return "下午";
+    }
+
+    return "晚上";
+
+}
+
+
+/* =========================
+   节次解析
+========================= */
+
+function parsePeriod(text){
+
+    if(!text){
+        return null;
+    }
+
+    text =
+        String(text).trim();
+
+    const cn =
+        text.match(
+            /第\s*(十一|十二|十|一|二|三|四|五|六|七|八|九)\s*节/
+        );
+
+    if(cn){
+        return CN_PERIOD[cn[1]];
+    }
+
+    const number =
+        text.match(
+            /\b(1[0-2]|[1-9])\b/
+        );
+
+    return number
+        ? Number(number[1])
+        : null;
+
+}
+
+
+/* =========================
+   周次解析
+========================= */
+
+function parseWeeks(text){
+
+    if(!text){
+        return [];
+    }
+
+    text =
+        String(text)
+        .replace(/第/g,"")
+        .replace(/周/g,"")
+        .replace(/，/g,",")
+        .trim();
+
+    const result = [];
+
+    for(
+        const m of text.matchAll(
+            /(\d+)\s*[-~—至]\s*(\d+)/g
+        )
+    ){
+
+        let a =
+            Number(m[1]);
+
+        let b =
+            Number(m[2]);
+
+        if(a > b){
+            [a,b] = [b,a];
+        }
+
+        for(
+            let i=a;
+            i<=b;
+            i++
+        ){
+
+            if(
+                i >= 1 &&
+                i <= 18
+            ){
+                result.push(i);
+            }
+
+        }
+
+    }
+
+
+    const rest =
+        text.replace(
+            /\d+\s*[-~—至]\s*\d+/g,
+            " "
+        );
+
+
+    for(
+        const m of rest.matchAll(/\d+/g)
+    ){
+
+        const n =
+            Number(m[0]);
+
+        if(
+            n >= 1 &&
+            n <= 18
+        ){
+            result.push(n);
+        }
+
+    }
+
+
+    return [
+        ...new Set(result)
+    ].sort(
+        (a,b)=>a-b
+    );
+
+}
+
+
+/* =========================
+   地点
+========================= */
+
+function normalizeRoom(raw){
+
+    if(!raw){
+        return "未设置";
+    }
+
+    let room =
+        String(raw)
+        .trim()
+        .replace(/\s+/g," ");
+
+    room =
+        room.replace(
+            /[)\]}>]+$/,
+            ""
+        );
+
+
+    if(room.includes("体育场")){
+        return "体育场";
+    }
+
+
+    if(
+        room.includes("实训室") ||
+        room.includes("实验室")
+    ){
+
+        const name =
+            room
+            .split("(")[0]
+            .trim();
+
+        if(name){
+            return name;
+        }
+
+    }
+
+
+    let match =
+        room.match(
+            /^(x\d{4})\(\1\)$/i
+        );
+
+    if(match){
+        room = match[1];
+    }
+
+
+    match =
+        room.match(
+            /^x(\d)(\d{3})$/i
+        );
+
+    if(match){
+
+        const building = {
+            "1":"一",
+            "2":"二",
+            "3":"三",
+            "4":"四",
+            "5":"五"
+        }[match[1]] || match[1];
+
+        return `${building}教${match[2]}`;
+
+    }
+
+
+    match =
+        room.match(
+            /^xs\d(\d{3})(?:-\d+)?$/i
+        );
+
+    if(match){
+        return match[1];
+    }
+
+
+    return room;
+
+}
+
+
+/* =========================
+   括号解析
+========================= */
+
+function readBalanced(text,start){
+
+    if(text[start] !== "("){
+        return null;
+    }
+
+    let depth = 0;
+
+    for(
+        let i=start;
+        i<text.length;
+        i++
+    ){
+
+        const c =
+            text[i];
+
+        if(c === "("){
+            depth++;
+        }
+
+        else if(c === ")"){
+
+            depth--;
+
+            if(depth === 0){
+
+                return {
+                    content:
+                        text.slice(
+                            start+1,
+                            i
+                        ),
+                    end:i+1
+                };
+
+            }
+
+        }
+
+    }
+
+
+    return {
+        content:
+            text.slice(start+1),
+        end:text.length
+    };
+
+}
+
+
+/* =========================
+   找课程代码
+========================= */
+
+const COURSE_CODE_RE =
+    /\(([0-9][A-Za-z0-9]*\.[A-Za-z0-9]+)\)/g;
+
+
+function findCourseHeaders(text){
+
+    const result = [];
+
+    COURSE_CODE_RE.lastIndex = 0;
+
+    let match;
+
+
+    while(
+        (match =
+            COURSE_CODE_RE.exec(text))
+    ){
+
+        const code =
+            match[1];
+
+        let nameStart =
+            match.index - 1;
+
+
+        while(
+            nameStart >= 0 &&
+            /\s/.test(
+                text[nameStart]
+            )
+        ){
+            nameStart--;
+        }
+
+
+        let start =
+            nameStart;
+
+
+        while(start >= 0){
+
+            const c =
+                text[start];
+
+            if(
+                c === "\n" ||
+                c === "\r" ||
+                c === "+"
+            ){
+
+                start++;
+                break;
+
+            }
+
+            start--;
+
+        }
+
+
+        if(start < 0){
+            start = 0;
+        }
+
+
+        let name =
+            text.slice(
+                start,
+                match.index
+            ).trim();
+
+
+        name =
+            name
+            .replace(/^[+\s]+/,"")
+            .replace(/[+\s]+$/,"");
+
+
+        if(name.includes("\n")){
+
+            const arr =
+                name
+                .split(/\n+/)
+                .map(
+                    x=>x.trim()
+                )
+                .filter(Boolean);
+
+            name =
+                arr[arr.length-1] ||
+                name;
+
+        }
+
+
+        result.push({
+
+            name,
+            code,
+
+            codeStart:
+                match.index,
+
+            codeEnd:
+                COURSE_CODE_RE.lastIndex
+
+        });
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =========================
+   解析星期单元格
+========================= */
+
+function parseCell(cell,day,period){
+
+    if(!cell || !cell.trim()){
+        return [];
+    }
+
+    const text =
+        cell
+        .replace(/\r/g,"")
+        .trim();
+
+    const headers =
+        findCourseHeaders(text);
+
+    const result = [];
+
+
+    for(
+        let i=0;
+        i<headers.length;
+        i++
+    ){
+
+        const h =
+            headers[i];
+
+        const end =
+            i + 1 < headers.length
+                ? headers[i+1].codeStart
+                : text.length;
+
+        const afterCode =
+            text.slice(
+                h.codeEnd,
+                end
+            );
+
+
+        let pos = 0;
+
+        const groups = [];
+
+
+        while(
+            pos < afterCode.length
+        ){
+
+            const index =
+                afterCode.indexOf(
+                    "(",
+                    pos
+                );
+
+            if(index < 0){
+                break;
+            }
+
+
+            const group =
+                readBalanced(
+                    afterCode,
+                    index
+                );
+
+            if(!group){
+                break;
+            }
+
+
+            groups.push(
+                group.content.trim()
+            );
+
+
+            pos =
+                group.end;
+
+        }
+
+
+        let teacher = "";
+
+        let locationGroups = [];
+
+
+        if(groups.length){
+
+            const first =
+                groups[0];
+
+            if(
+                /^\s*\d/.test(first) &&
+                first.includes(",")
+            ){
+
+                locationGroups =
+                    groups;
+
+            }else{
+
+                teacher =
+                    first;
+
+                locationGroups =
+                    groups.slice(1);
+
+            }
+
+        }
+
+
+        if(!locationGroups.length){
+
+            const locRegex =
+                /\(\s*([0-9][^,()]*)\s*,\s*([\s\S]*?)(?=\n\s*[^\n(]+\([0-9][A-Za-z0-9]*\.[A-Za-z0-9]+\)|$)/g;
+
+            let lm;
+
+
+            while(
+                (lm =
+                    locRegex.exec(afterCode))
+            ){
+
+                locationGroups.push(
+                    `${lm[1]},${lm[2]}`
+                );
+
+            }
+
+        }
+
+
+        for(
+            const location
+            of locationGroups
+        ){
+
+            const comma =
+                location.indexOf(",");
+
+            if(comma < 0){
+                continue;
+            }
+
+
+            const weekText =
+                location
+                .slice(0,comma)
+                .trim();
+
+
+            let rawRoom =
+                location
+                .slice(comma+1)
+                .trim();
+
+
+            rawRoom =
+                rawRoom
+                .replace(
+                    /[)\]}]+$/,
+                    ""
+                )
+                .trim();
+
+
+            const weeks =
+                parseWeeks(
+                    weekText
+                );
+
+
+            if(!weeks.length){
+                continue;
+            }
+
+
+            result.push({
+
+                id:
+                    `${Date.now()}_${Math.random().toString(36).slice(2)}`,
+
+                name:h.name,
+
+                code:h.code,
+
+                teacher:
+                    teacher ||
+                    "教师未设置",
+
+                day,
+
+                start:period,
+
+                end:
+                    Math.min(
+                        period + 1,
+                        12
+                    ),
+
+                weeks,
+
+                room:
+                    normalizeRoom(
+                        rawRoom
+                    ),
+
+                rawRoom
+
+            });
+
+        }
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =========================
+   按 TAB 恢复星期列
+========================= */
+
+function parseRows(text){
+
+    const lines =
+        text
+        .replace(/\r\n/g,"\n")
+        .replace(/\r/g,"\n")
+        .split("\n");
+
+    const rows = [];
+
+    let current = null;
+
+    let currentCol = -1;
+
+
+    for(
+        const rawLine
+        of lines
+    ){
+
+        if(
+            rawLine.includes(
+                "课程列表:"
+            )
+        ){
+            break;
+        }
+
+
+        const periodMatch =
+            rawLine.match(
+                /^\s*第(一|二|三|四|五|六|七|八|九|十|十一|十二)节/
+            );
+
+
+        if(periodMatch){
+
+            if(current){
+                rows.push(current);
+            }
+
+
+            const period =
+                CN_PERIOD[
+                    periodMatch[1]
+                ];
+
+
+            current = {
+
+                period,
+
+                cells:[
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    ""
+                ]
+
+            };
+
+
+            currentCol = -1;
+
+
+            const parts =
+                rawLine.split("\t");
+
+
+            for(
+                let i=1;
+                i<parts.length;
+                i++
+            ){
+
+                const day =
+                    i - 1;
+
+                if(day > 6){
+                    break;
+                }
+
+
+                if(parts[i]){
+
+                    current.cells[day] =
+                        parts[i].trim();
+
+                }
+
+            }
+
+
+            currentCol =
+                Math.min(
+                    6,
+                    parts.length - 2
+                );
+
+
+            continue;
+
+        }
+
+
+        if(!current){
+            continue;
+        }
+
+
+        if(rawLine === ""){
+            continue;
+        }
+
+
+        const parts =
+            rawLine.split("\t");
+
+
+        if(parts.length === 1){
+
+            if(currentCol >= 0){
+
+                current.cells[currentCol] +=
+                    (
+                        current.cells[currentCol]
+                            ? "\n"
+                            : ""
+                    ) +
+                    parts[0].trim();
+
+            }
+
+            continue;
+
+        }
+
+
+        let col =
+            currentCol;
+
+
+        for(
+            const part
+            of parts
+        ){
+
+            if(col < 0){
+                col = 0;
+            }
+
+
+            if(col > 6){
+                break;
+            }
+
+
+            if(part){
+
+                current.cells[col] +=
+                    (
+                        current.cells[col]
+                            ? "\n"
+                            : ""
+                    ) +
+                    part.trim();
+
+            }
+
+
+            col++;
+
+        }
+
+
+        currentCol =
+            Math.min(
+                6,
+                col - 1
+            );
+
+    }
+
+
+    if(current){
+        rows.push(current);
+    }
+
+
+    return rows;
+
+}
+
+
+/* =========================
+   主解析
+========================= */
+
+function parseSchoolSchedule(source){
+
+    if(
+        !source ||
+        !source.trim()
+    ){
+
+        throw new Error(
+            "没有课表内容"
+        );
+
+    }
+
+
+    const text =
+        source
+        .replace(/\u00a0/g," ")
+        .replace(/\r\n/g,"\n")
+        .replace(/\r/g,"\n");
+
+
+    if(
+        !text.includes("星期一") ||
+        !text.includes("星期二") ||
+        !text.includes("星期三") ||
+        !text.includes("星期四")
+    ){
+
+        throw new Error(
+            "没有找到完整课表表头"
+        );
+
+    }
+
+
+    const headerIndex =
+        text.indexOf("星期一");
+
+
+    const scheduleText =
+        text.slice(
+            Math.max(
+                0,
+                text.lastIndexOf(
+                    "节次/周次",
+                    headerIndex
+                )
+            )
+        );
+
+
+    const rows =
+        parseRows(
+            scheduleText
+        );
+
+
+    const result = [];
+
+
+    for(
+        const row
+        of rows
+    ){
+
+        if(
+            !row.period ||
+            row.period < 1 ||
+            row.period > 12
+        ){
+            continue;
+        }
+
+
+        for(
+            let day=1;
+            day<=7;
+            day++
+        ){
+
+            const cell =
+                row.cells[day-1];
+
+
+            if(!cell){
+                continue;
+            }
+
+
+            const parsed =
+                parseCell(
+                    cell,
+                    day,
+                    row.period
+                );
+
+
+            result.push(
+                ...parsed
+            );
+
+        }
+
+    }
+
+
+    const map =
+        new Map();
+
+
+    for(
+        const course
+        of result
+    ){
+
+        const key = [
+
+            course.code,
+            course.day,
+            course.start,
+            course.end,
+            course.teacher,
+            course.room,
+            course.weeks.join(",")
+
+        ].join("|");
+
+
+        if(!map.has(key)){
+            map.set(
+                key,
+                course
+            );
+        }
+
+    }
+
+
+    const finalCourses =
+        [...map.values()];
+
+
+    if(!finalCourses.length){
+
+        throw new Error(
+            "没有识别到课程"
+        );
+
+    }
+
+
+    return finalCourses;
+
+}
+
+
+/* =========================
+   获取某周课程
+========================= */
+
+function getCoursesForWeek(week){
+
+    return courses.filter(
+        course =>
+            Array.isArray(course.weeks) &&
+            course.weeks.includes(week)
+    );
+
+}
+
+
+/* =========================
+   教学周
+========================= */
 
 function renderWeeks(){
 
     const box =
         document.getElementById(
-            "weekList"
+            "weeks"
         );
-
 
     box.innerHTML = "";
 
 
+    const current =
+        getCurrentWeek();
+
+
     for(
-        let week=1;
-        week<=18;
-        week++
+        let i=1;
+        i<=18;
+        i++
     ){
 
         const button =
@@ -2588,175 +2396,229 @@ function renderWeeks(){
 
 
         button.className =
-            "week-btn" +
-            (
-                week === currentWeek
-                ? " active"
-                : ""
+            "week-btn";
+
+
+        if(i === current){
+
+            button.classList.add(
+                "current"
             );
+
+        }
+
+
+        if(i === selectedWeek){
+
+            button.classList.add(
+                "active"
+            );
+
+        }
 
 
         button.textContent =
-            `第${week}周`;
+            i;
 
 
-        button.onclick =
-            () => {
+        button.onclick = () => {
 
-                currentWeek =
-                    week;
+            selectedWeek =
+                i;
 
-                renderWeeks();
+            renderAll();
 
-                renderSchedule();
+            scrollSelectedWeekIntoView();
 
-                updateCurrentWeekText();
-
-            };
+        };
 
 
-        box.appendChild(
-            button
-        );
+        box.appendChild(button);
 
     }
 
 
-    updateCurrentWeekText();
+    document.getElementById(
+        "weekText"
+    ).textContent =
+        `第 ${selectedWeek} 周`;
 
 }
 
 
-/* =========================================================
-   当前周文字
-========================================================= */
+/* =========================
+   自动滚动到当前选择周
+========================= */
 
-function updateCurrentWeekText(){
+function scrollSelectedWeekIntoView(){
 
-    const el =
-        document.getElementById(
-            "currentWeekNumber"
-        );
+    requestAnimationFrame(() => {
 
+        const box =
+            document.getElementById(
+                "weeks"
+            );
 
-    if(el){
-
-        el.textContent =
-            `第${currentWeek}周`;
-
-    }
-
-}
-
-
-/* =========================================================
-   创建课程卡片
-========================================================= */
-
-function createCourseCard(course){
-
-    const card =
-        document.createElement(
-            "div"
-        );
-
-
-    card.className =
-        "course";
-
-
-    const room =
-        getRoomName(
-            course.room
-        );
-
-
-    card.innerHTML = `
-
-        <div class="course-name">
-            ${escapeHTML(
-                course.name
-            )}
-        </div>
-
-        ${
-            room !== "未设置"
-            ? `
-            <div class="course-room">
-                📍 ${escapeHTML(room)}
-            </div>
-            `
-            : ""
-        }
-
-        ${
-            course.teacher
-            ? `
-            <div class="course-teacher">
-                ${escapeHTML(
-                    course.teacher
-                )}
-            </div>
-            `
-            : ""
-        }
-
-    `;
-
-
-    card.onclick =
-        () =>
-            showCourseDetail(
-                course
+        const active =
+            box.querySelector(
+                ".week-btn.active"
             );
 
 
-    return card;
+        if(!active){
+            return;
+        }
+
+
+        const target =
+            active.offsetLeft -
+            box.clientWidth / 2 +
+            active.offsetWidth / 2;
+
+
+        box.scrollTo({
+
+            left:Math.max(
+                0,
+                target
+            ),
+
+            behavior:"smooth"
+
+        });
+
+    });
 
 }
 
 
-/* =========================================================
-   判断两个课程是否相同
-========================================================= */
+/* =========================
+   日期表头
+========================= */
 
-function sameCourse(a,b){
+function renderDayHeaders(){
 
-    if(!a || !b){
+    const currentWeek =
+        getCurrentWeek();
 
-        return false;
+    const todayDay =
+        getDayNumber();
+
+
+    for(
+        let day=1;
+        day<=7;
+        day++
+    ){
+
+        const el =
+            document.getElementById(
+                `dayHead${day}`
+            );
+
+
+        const date =
+            getDateForDay(
+                selectedWeek,
+                day
+            );
+
+
+        const today =
+            selectedWeek === currentWeek &&
+            day === todayDay;
+
+
+        el.className =
+            "day-head" +
+            (
+                today
+                    ? " today"
+                    : ""
+            );
+
+
+        el.innerHTML = `
+
+            <div class="day-name">
+
+                ${DAY_NAMES[day-1]}
+
+                ${today ? " · 今天" : ""}
+
+            </div>
+
+            <span class="date">
+
+                ${formatDate(date)}
+
+            </span>
+
+        `;
 
     }
 
+}
 
-    return (
-        Number(a.day) === Number(b.day) &&
-        Number(a.start) === Number(b.start) &&
-        a.name === b.name &&
-        a.code === b.code &&
-        a.teacher === b.teacher &&
-        a.room === b.room
-    );
+
+/* =========================
+   课程卡片
+========================= */
+
+function courseCardHTML(course){
+
+    const today =
+        selectedWeek === getCurrentWeek() &&
+        course.day === getDayNumber();
+
+
+    return `
+
+        <div
+            class="course-card ${
+                today
+                    ? "today-highlight"
+                    : ""
+            }"
+            onclick="showCourseDetail('${course.id}')"
+        >
+
+            <div class="course-name">
+
+                ${escapeHTML(
+                    course.name
+                )}
+
+            </div>
+
+
+            <div class="course-teacher">
+
+                👤 ${escapeHTML(
+                    course.teacher
+                )}
+
+            </div>
+
+
+            <div class="course-room">
+
+                📍 ${escapeHTML(
+                    course.room
+                )}
+
+            </div>
+
+        </div>
+
+    `;
 
 }
 
 
-/* =========================================================
-   ★ 渲染课表
-=========================================================
-
-   重点：
-
-   第1节 + 第2节
-   第3节 + 第4节
-   第5节 + 第6节
-   ...
-
-   课程卡片使用 rowspan=2，
-   因此视觉上就是一个完整的大课程块。
-
-   不显示任何课程时间。
-========================================================= */
+/* =========================
+   课表
+========================= */
 
 function renderSchedule(){
 
@@ -2769,20 +2631,14 @@ function renderSchedule(){
     body.innerHTML = "";
 
 
-    /*
-       记录哪些单元格已经被 rowspan 占用。
+    const weekCourses =
+        getCoursesForWeek(
+            selectedWeek
+        );
 
-       occupied[day][period] = true
-    */
 
     const occupied =
-        Array.from(
-            {
-                length:8
-            },
-            () =>
-                Array(13).fill(false)
-        );
+        new Set();
 
 
     for(
@@ -2797,29 +2653,44 @@ function renderSchedule(){
             );
 
 
-        /*
-           左侧节次
-
-           不再显示课程时间。
-        */
-
-        const th =
+        const periodCell =
             document.createElement(
-                "th"
+                "td"
             );
 
 
-        th.innerHTML = `
+        periodCell.className =
+            "period-cell";
 
-            <div class="period-number">
-                第${period}节
+
+        if(
+            period === 1 ||
+            period === 5 ||
+            period === 9
+        ){
+
+            periodCell.classList.add(
+                "part-start"
+            );
+
+        }
+
+
+        periodCell.innerHTML = `
+
+            <div class="period-num">
+                ${period}
+            </div>
+
+            <div class="period-part">
+                ${getPart(period)}
             </div>
 
         `;
 
 
         tr.appendChild(
-            th
+            periodCell
         );
 
 
@@ -2829,17 +2700,14 @@ function renderSchedule(){
             day++
         ){
 
-            /*
-               如果上一行课程已经 rowspan，
-               当前这个 td 就不要创建。
-            */
+            const key =
+                `${day}-${period}`;
+
 
             if(
-                occupied[day][period]
+                occupied.has(key)
             ){
-
                 continue;
-
             }
 
 
@@ -2849,184 +2717,100 @@ function renderSchedule(){
                 );
 
 
-            const courses =
-                getCourses(
-                    currentWeek,
-                    day
-                ).filter(
-                    course =>
-                        Number(course.start) === period
-                );
-
-
-            /*
-               当前节没有课程。
-            */
-
             if(
-                courses.length === 0
+                selectedWeek === getCurrentWeek() &&
+                day === getDayNumber()
             ){
 
-                tr.appendChild(
-                    td
+                td.classList.add(
+                    "today-col"
                 );
-
-                continue;
 
             }
 
 
-            /*
-               正常情况下一个时间块只有一个课程。
-
-               如果出现多个课程，
-               仍然全部显示。
-            */
-
-            courses.forEach(
-                course => {
-
-                    /*
-                       默认两节连续。
-
-                       如果是第12节，
-                       不能超过12。
-                    */
-
-                    const canSpanTwo =
-                        Number(course.end) >
-                        Number(course.start) &&
-                        Number(course.start) < 12;
+            const matches =
+                weekCourses.filter(
+                    course =>
+                        course.day === day &&
+                        course.start === period
+                );
 
 
-                    if(
-                        canSpanTwo
-                    ){
+            if(matches.length){
 
-                        /*
-                           如果第二节没有其他独立课程，
-                           就让当前课程占两行。
-
-                           这里不强行要求第二行存在相同课程，
-                           因为你学校复制出来的课表本身
-                           经常只在第一行保留课程内容。
-                        */
-
-                        const nextCourses =
-                            getCourses(
-                                currentWeek,
-                                day
-                            ).filter(
-                                other =>
-                                    Number(other.start) ===
-                                    Number(course.start) + 1
-                            );
+                td.innerHTML =
+                    matches
+                    .map(
+                        course =>
+                            courseCardHTML(
+                                course
+                            )
+                    )
+                    .join("");
 
 
-                        /*
-                           如果下一节完全没有课程，
-                           才安全 rowspan=2。
+                if(
+                    matches.length === 1
+                ){
 
-                           这样不会把两个不同课程压在一起。
-                        */
-
-                        const safeToSpan =
-                            nextCourses.length === 0;
+                    const course =
+                        matches[0];
 
 
-                        if(
-                            safeToSpan
+                    const span =
+                        Math.min(
+                            course.end -
+                            course.start +
+                            1,
+
+                            12 -
+                            period +
+                            1
+                        );
+
+
+                    if(span > 1){
+
+                        td.rowSpan =
+                            span;
+
+
+                        for(
+                            let p=period+1;
+                            p<period+span;
+                            p++
                         ){
 
-                            td.rowSpan = 2;
-
-                            occupied[day][period + 1] = true;
+                            occupied.add(
+                                `${day}-${p}`
+                            );
 
                         }
 
                     }
 
-
-                    const card =
-                        createCourseCard(
-                            course
-                        );
-
-
-                    td.appendChild(
-                        card
-                    );
-
                 }
-            );
+
+            }
 
 
-            tr.appendChild(
-                td
-            );
+            tr.appendChild(td);
 
         }
 
 
-        body.appendChild(
-            tr
-        );
+        body.appendChild(tr);
 
     }
 
-
-    updateHeaderDates();
-
 }
 
 
-/* =========================================================
-   表头日期
-========================================================= */
-
-function updateHeaderDates(){
-
-    document
-        .querySelectorAll(
-            ".schedule thead th[data-day]"
-        )
-        .forEach(
-            header => {
-
-                const day =
-                    Number(
-                        header.dataset.day
-                    );
-
-
-                const date =
-                    getDateForDay(
-                        currentWeek,
-                        day
-                    );
-
-
-                header.innerHTML = `
-
-                    <div class="day-name">
-                        ${DAYS[day-1]}
-                    </div>
-
-                    <div class="day-date">
-                        ${formatDate(date)}
-                    </div>
-
-                `;
-
-            }
-        );
-
-}
-
-
-/* =========================================================
+/* =========================
    今日课程
-========================================================= */
+   纵向玻璃拟态列表
+========================= */
 
 function renderToday(){
 
@@ -3035,276 +2819,522 @@ function renderToday(){
             "todayList"
         );
 
-
-    const dateEl =
+    const info =
         document.getElementById(
-            "todayDate"
+            "todayInfo"
         );
 
-
-    const today =
+    const now =
         new Date();
-
-
-    const day =
-        today.getDay() === 0
-        ? 7
-        : today.getDay();
-
 
     const week =
         getCurrentWeek();
 
-
-    if(dateEl){
-
-        dateEl.textContent =
-            `${today.getMonth()+1}月${today.getDate()}日 · 第${week}周`;
-
-    }
+    const day =
+        getDayNumber(now);
 
 
-    const courses =
-        getCourses(
-            week,
-            day
+    /* 顶部日期信息 */
+
+    info.textContent =
+        `${formatDate(now)} · 第${week}周 · ${DAY_NAMES[day-1]}`;
+
+
+    /* 获取今天课程 */
+
+    const todayCourses =
+        courses
+        .filter(
+            course =>
+                Number(course.day) === day &&
+                Array.isArray(course.weeks) &&
+                course.weeks.includes(week)
+        )
+        .sort(
+            (a,b) =>
+                Number(a.start || 0) -
+                Number(b.start || 0)
         );
 
 
-    list.innerHTML = "";
+    /* 没有课程 */
 
+    if(!todayCourses.length){
 
-    if(
-        courses.length === 0
-    ){
+        list.innerHTML = `
 
-        list.innerHTML =
-            `
-            <div class="empty">
-                今天没有课程
+            <div class="today-empty">
+
+                🎉 今天没有安排课程
+
             </div>
-            `;
+
+        `;
 
         return;
 
     }
 
 
-    courses.forEach(
-        course => {
+    /* 纵向生成 */
 
-            const item =
-                document.createElement(
-                    "div"
-                );
+    list.innerHTML =
+        todayCourses
+        .map(
+            course => `
 
+                <div
+                    class="today-course"
+                    onclick="showCourseDetail('${escapeHTML(course.id)}')"
+                >
 
-            item.className =
-                "today-item";
+                    <!-- 节次 -->
 
+                    <div class="today-period-box">
 
-            const room =
-                getRoomName(
-                    course.room
-                );
+                        <div class="today-period">
 
+                            第${course.start}-${course.end}节
 
-            item.innerHTML = `
+                        </div>
 
-                <div class="today-period">
-                    第${course.start}-${course.end}节
-                </div>
+                        <div class="today-part">
 
-                <div class="today-info">
+                            ${getPart(course.start)}
 
-                    <div class="today-course">
-                        ${escapeHTML(
-                            course.name
-                        )}
-                    </div>
-
-                    <div class="today-room">
-
-                        ${
-                            room !== "未设置"
-                            ? "📍 " +
-                              escapeHTML(room)
-                            : ""
-                        }
-
-                        ${
-                            course.teacher
-                            ? " · " +
-                              escapeHTML(
-                                  course.teacher
-                              )
-                            : ""
-                        }
+                        </div>
 
                     </div>
 
+
+                    <!-- 课程信息 -->
+
+                    <div class="today-course-content">
+
+                        <div class="today-course-name">
+
+                            ${escapeHTML(
+                                course.name
+                            )}
+
+                        </div>
+
+
+                        <div class="today-meta">
+
+                            <span class="badge">
+
+                                👤 ${escapeHTML(
+                                    course.teacher
+                                )}
+
+                            </span>
+
+
+                            <span class="badge">
+
+                                📍 ${escapeHTML(
+                                    course.room
+                                )}
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 箭头 -->
+
+                    <div class="today-arrow">
+
+                        ›
+
+                    </div>
+
                 </div>
 
-            `;
+            `
+        )
+        .join("");
+
+}
 
 
-            item.onclick =
-                () =>
-                    showCourseDetail(
-                        course
-                    );
+/* =========================
+   刷新
+========================= */
+
+function renderAll(){
+
+    renderWeeks();
+
+    renderDayHeaders();
+
+    renderSchedule();
+
+    renderToday();
+
+}
 
 
-            list.appendChild(
-                item
+/* =========================
+   导入弹窗
+========================= */
+
+function openImportModal(){
+
+    document
+        .getElementById(
+            "importModal"
+        )
+        .classList.add("show");
+
+}
+
+
+function closeImportModal(){
+
+    document
+        .getElementById(
+            "importModal"
+        )
+        .classList.remove("show");
+
+}
+
+
+/* =========================
+   粘贴导入
+========================= */
+
+function importScheduleText(){
+
+    const input =
+        document.getElementById(
+            "scheduleInput"
+        );
+
+
+    const text =
+        input.value;
+
+
+    if(!text.trim()){
+
+        showToast(
+            "请先粘贴课表"
+        );
+
+        return;
+
+    }
+
+
+    parseAndLoadSchedule(
+        text
+    );
+
+}
+
+
+/* =========================
+   文件导入
+========================= */
+
+function readScheduleFile(event){
+
+    const file =
+        event.target.files[0];
+
+
+    if(!file){
+        return;
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload = function(){
+
+        const text =
+            String(
+                reader.result || ""
+            );
+
+
+        document.getElementById(
+            "scheduleInput"
+        ).value = text;
+
+
+        parseAndLoadSchedule(
+            text
+        );
+
+    };
+
+
+    reader.onerror = function(){
+
+        showToast(
+            "读取文件失败"
+        );
+
+    };
+
+
+    reader.readAsText(
+        file,
+        "UTF-8"
+    );
+
+
+    event.target.value = "";
+
+}
+
+
+/* =========================
+   解析并加载
+========================= */
+
+function parseAndLoadSchedule(text){
+
+    try{
+
+        const parsed =
+            parseSchoolSchedule(
+                text
+            );
+
+
+        const uniqueNames =
+            new Set(
+                parsed.map(
+                    x => x.code
+                )
+            );
+
+
+        if(
+            uniqueNames.size < 3
+        ){
+
+            throw new Error(
+                `只识别到 ${uniqueNames.size} 门课程，已取消导入`
             );
 
         }
+
+
+        courses =
+            parsed;
+
+
+        saveData();
+
+
+        selectedWeek =
+            getCurrentWeek();
+
+
+        renderAll();
+
+
+        closeImportModal();
+
+
+        showToast(
+            `已识别 ${uniqueNames.size} 门课程`
+        );
+
+
+        setTimeout(
+            scrollSelectedWeekIntoView,
+            100
+        );
+
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+
+        showToast(
+            error.message ||
+            "解析失败"
+        );
+
+    }
+
+}
+
+
+/* =========================
+   备份
+========================= */
+
+function exportJSON(){
+
+    const data = {
+
+        version:8,
+
+        semesterStart:
+            "2026-09-01",
+
+        semester:
+            "2026-2027学年1学期",
+
+        courses
+
+    };
+
+
+    const blob =
+        new Blob(
+            [
+                JSON.stringify(
+                    data,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:"application/json"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    const a =
+        document.createElement(
+            "a"
+        );
+
+
+    a.href =
+        url;
+
+
+    a.download =
+        "我的课表备份.json";
+
+
+    a.click();
+
+
+    URL.revokeObjectURL(
+        url
+    );
+
+
+    showToast(
+        "备份已导出"
     );
 
 }
 
 
-/* =========================================================
-   课程详情
-========================================================= */
+function importJSON(event){
 
-function showCourseDetail(course){
-
-    const modal =
-        document.getElementById(
-            "detailModal"
-        );
+    const file =
+        event.target.files[0];
 
 
-    const content =
-        document.getElementById(
-            "detailContent"
-        );
+    if(!file){
+        return;
+    }
 
 
-    const room =
-        getRoomName(
-            course.room
-        );
+    const reader =
+        new FileReader();
 
 
-    const weeks =
-        course.weeks
-        .map(
-            week =>
-                `第${week}周`
-        )
-        .join("、");
+    reader.onload =
+        function(){
+
+            try{
+
+                const data =
+                    JSON.parse(
+                        reader.result
+                    );
 
 
-    content.innerHTML = `
+                if(
+                    !data ||
+                    !Array.isArray(
+                        data.courses
+                    )
+                ){
 
-        <div class="detail-course-name">
-            ${escapeHTML(
-                course.name
-            )}
-        </div>
+                    throw new Error(
+                        "备份格式错误"
+                    );
 
-        <div class="detail-code">
-            ${escapeHTML(
-                course.code
-            )}
-        </div>
-
-        <div class="detail-grid">
-
-            <div class="detail-item">
-
-                <div class="detail-label">
-                    星期
-                </div>
-
-                <div class="detail-value">
-                    ${DAYS[
-                        course.day - 1
-                    ]}
-                </div>
-
-            </div>
+                }
 
 
-            <div class="detail-item">
-
-                <div class="detail-label">
-                    节次
-                </div>
-
-                <div class="detail-value">
-                    第${course.start}-${course.end}节
-                </div>
-
-            </div>
+                courses =
+                    data.courses;
 
 
-            <div class="detail-item">
-
-                <div class="detail-label">
-                    教室
-                </div>
-
-                <div class="detail-value">
-                    ${escapeHTML(
-                        room
-                    )}
-                </div>
-
-            </div>
+                saveData();
 
 
-            <div class="detail-item">
-
-                <div class="detail-label">
-                    教师
-                </div>
-
-                <div class="detail-value">
-                    ${escapeHTML(
-                        course.teacher ||
-                        "未设置"
-                    )}
-                </div>
-
-            </div>
+                selectedWeek =
+                    getCurrentWeek();
 
 
-            <div
-                class="detail-item"
-                style="grid-column:1/-1"
-            >
-
-                <div class="detail-label">
-                    上课周次
-                </div>
-
-                <div class="detail-value">
-                    ${escapeHTML(
-                        weeks
-                    )}
-                </div>
-
-            </div>
-
-        </div>
-
-    `;
+                renderAll();
 
 
-    modal.classList.remove(
-        "hidden"
+                closeModal(
+                    "settingsModal"
+                );
+
+
+                showToast(
+                    "备份恢复成功"
+                );
+
+
+            }catch(error){
+
+                showToast(
+                    "恢复失败：" +
+                    error.message
+                );
+
+            }
+
+        };
+
+
+    reader.readAsText(
+        file
     );
+
+
+    event.target.value = "";
 
 }
 
 
-/* =========================================================
-   保存
-========================================================= */
+/* =========================
+   本地存储
+========================= */
 
 function saveData(){
 
@@ -3312,23 +3342,15 @@ function saveData(){
         STORAGE_KEY,
         JSON.stringify({
 
-            version:10,
+            version:8,
 
-            semester:
-                "2026-2027学年1学期",
-
-            courses:
-                scheduleData
+            courses
 
         })
     );
 
 }
 
-
-/* =========================================================
-   加载
-========================================================= */
 
 function loadData(){
 
@@ -3341,9 +3363,7 @@ function loadData(){
 
 
         if(!raw){
-
-            return false;
-
+            return;
         }
 
 
@@ -3354,23 +3374,16 @@ function loadData(){
 
 
         if(
-            !data ||
-            !Array.isArray(
+            data &&
+            Array.isArray(
                 data.courses
-            ) ||
-            data.courses.length === 0
+            )
         ){
 
-            return false;
+            courses =
+                data.courses;
 
         }
-
-
-        scheduleData =
-            data.courses;
-
-
-        return true;
 
     }catch(error){
 
@@ -3378,119 +3391,288 @@ function loadData(){
             error
         );
 
-        return false;
-
     }
 
 }
 
 
-/* =========================================================
-   导入文本
-========================================================= */
+/* =========================
+   课程详情
+========================= */
 
-function importText(text){
+function showCourseDetail(id){
 
-    if(
-        !text ||
-        !text.trim()
-    ){
-
-        toast(
-            "请先粘贴课表"
+    const course =
+        courses.find(
+            x =>
+                String(x.id) ===
+                String(id)
         );
 
-        return;
 
+    if(!course){
+        return;
     }
 
 
-    importScheduleText(
-        text
+    const date =
+        getDateForDay(
+            selectedWeek,
+            course.day
+        );
+
+
+    document.getElementById(
+        "courseDetail"
+    ).innerHTML = `
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                课程
+            </div>
+
+            <div class="detail-value">
+                ${escapeHTML(
+                    course.name
+                )}
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                课程代码
+            </div>
+
+            <div class="detail-value">
+                ${escapeHTML(
+                    course.code
+                )}
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                教师
+            </div>
+
+            <div class="detail-value">
+                ${escapeHTML(
+                    course.teacher
+                )}
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                星期
+            </div>
+
+            <div class="detail-value">
+                ${DAY_NAMES[
+                    course.day-1
+                ]}
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                节次
+            </div>
+
+            <div class="detail-value">
+                第${course.start}-${course.end}节 ·
+                ${getPart(course.start)}
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                日期
+            </div>
+
+            <div class="detail-value">
+                ${formatDate(date)}
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                教学周
+            </div>
+
+            <div class="detail-value">
+                ${course.weeks.join("、")} 周
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                地点
+            </div>
+
+            <div class="detail-value">
+                📍 ${escapeHTML(
+                    course.room
+                )}
+            </div>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById(
+            "detailModal"
+        )
+        .classList.add("show");
+
+}
+
+
+/* =========================
+   设置
+========================= */
+
+function openSettings(){
+
+    document
+        .getElementById(
+            "settingsModal"
+        )
+        .classList.add("show");
+
+}
+
+
+function closeModal(id){
+
+    document
+        .getElementById(id)
+        .classList.remove(
+            "show"
+        );
+
+}
+
+
+/* =========================
+   点击遮罩
+========================= */
+
+document
+    .querySelectorAll(".modal-mask")
+    .forEach(
+        modal => {
+
+            modal.addEventListener(
+                "click",
+                event => {
+
+                    if(
+                        event.target ===
+                        modal
+                    ){
+
+                        modal.classList.remove(
+                            "show"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+/* =========================
+   清空
+========================= */
+
+function clearAllData(){
+
+    if(
+        !confirm(
+            "确定清空当前课表吗？"
+        )
+    ){
+        return;
+    }
+
+
+    courses = [];
+
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+
+    renderAll();
+
+
+    closeModal(
+        "settingsModal"
+    );
+
+
+    setTimeout(
+        openImportModal,
+        200
+    );
+
+
+    showToast(
+        "课表已清空"
     );
 
 }
 
 
-/* =========================================================
-   显示主页面
-========================================================= */
-
-function showMainPage(){
-
-    document
-        .getElementById(
-            "importPage"
-        )
-        .classList.add(
-            "hidden"
-        );
-
-
-    document
-        .getElementById(
-            "mainPage"
-        )
-        .classList.remove(
-            "hidden"
-        );
-
-
-    renderWeeks();
-
-    renderSchedule();
-
-    renderToday();
-
-}
-
-
-/* =========================================================
-   显示导入页
-========================================================= */
-
-function showImportPage(){
-
-    document
-        .getElementById(
-            "mainPage"
-        )
-        .classList.add(
-            "hidden"
-        );
-
-
-    document
-        .getElementById(
-            "importPage"
-        )
-        .classList.remove(
-            "hidden"
-        );
-
-}
-
-
-/* =========================================================
+/* =========================
    Toast
-========================================================= */
+========================= */
 
-let toastTimer = null;
+let toastTimer;
 
 
-function toast(message){
+function showToast(message){
 
-    const box =
+    const toast =
         document.getElementById(
             "toast"
         );
 
 
-    box.textContent =
+    toast.textContent =
         message;
 
 
-    box.classList.add(
+    toast.classList.add(
         "show"
     );
 
@@ -3504,575 +3686,106 @@ function toast(message){
         setTimeout(
             () => {
 
-                box.classList.remove(
+                toast.classList.remove(
                     "show"
                 );
 
             },
-            2500
+            3000
         );
 
 }
 
 
-/* =========================================================
-   粘贴按钮
-========================================================= */
-
-document
-    .getElementById(
-        "pasteBtn"
-    )
-    .onclick =
-    () => {
-
-        document
-            .getElementById(
-                "pasteModal"
-            )
-            .classList.remove(
-                "hidden"
-            );
-
-    };
-
-
-/* =========================================================
-   导入文件
-========================================================= */
-
-document
-    .getElementById(
-        "fileImportBtn"
-    )
-    .onclick =
-    () => {
-
-        document
-            .getElementById(
-                "fileInput"
-            )
-            .click();
-
-    };
-
-
-/* =========================================================
-   关闭粘贴
-========================================================= */
-
-function closePasteModal(){
-
-    document
-        .getElementById(
-            "pasteModal"
-        )
-        .classList.add(
-            "hidden"
-        );
-
-}
-
-
-document
-    .getElementById(
-        "closePasteBtn"
-    )
-    .onclick =
-    closePasteModal;
-
-
-document
-    .getElementById(
-        "cancelPasteBtn"
-    )
-    .onclick =
-    closePasteModal;
-
-
-/* =========================================================
-   生成课表
-========================================================= */
-
-document
-    .getElementById(
-        "generateBtn"
-    )
-    .onclick =
-    () => {
-
-        const textarea =
-            document.getElementById(
-                "pasteText"
-            );
-
-
-        importText(
-            textarea.value
-        );
-
-    };
-
-
-/* =========================================================
-   文件导入
-========================================================= */
-
-document
-    .getElementById(
-        "fileInput"
-    )
-    .addEventListener(
-        "change",
-        event => {
-
-            const file =
-                event.target.files[0];
-
-
-            if(!file){
-
-                return;
-
-            }
-
-
-            const reader =
-                new FileReader();
-
-
-            reader.onload =
-                () => {
-
-                    importText(
-                        reader.result
-                    );
-
-                };
-
-
-            reader.readAsText(
-                file,
-                "utf-8"
-            );
-
-
-            event.target.value =
-                "";
-
-        }
-    );
-
-
-/* =========================================================
-   设置
-========================================================= */
-
-document
-    .getElementById(
-        "settingsBtn"
-    )
-    .onclick =
-    () => {
-
-        document
-            .getElementById(
-                "settingsModal"
-            )
-            .classList.remove(
-                "hidden"
-            );
-
-    };
-
-
-document
-    .getElementById(
-        "closeSettingsBtn"
-    )
-    .onclick =
-    () => {
-
-        document
-            .getElementById(
-                "settingsModal"
-            )
-            .classList.add(
-                "hidden"
-            );
-
-    };
-
-
-/* =========================================================
-   详情关闭
-========================================================= */
-
-document
-    .getElementById(
-        "closeDetailBtn"
-    )
-    .onclick =
-    () => {
-
-        document
-            .getElementById(
-                "detailModal"
-            )
-            .classList.add(
-                "hidden"
-            );
-
-    };
-
-
-/* =========================================================
-   导出
-========================================================= */
-
-document
-    .getElementById(
-        "exportBtn"
-    )
-    .onclick =
-    () => {
-
-        const data = {
-
-            version:10,
-
-            exportTime:
-                new Date()
-                .toISOString(),
-
-            semester:
-                "2026-2027学年1学期",
-
-            courses:
-                scheduleData
-
-        };
-
-
-        const blob =
-            new Blob(
-                [
-                    JSON.stringify(
-                        data,
-                        null,
-                        2
-                    )
-                ],
-                {
-                    type:
-                        "application/json"
-                }
-            );
-
-
-        const url =
-            URL.createObjectURL(
-                blob
-            );
-
-
-        const a =
-            document.createElement(
-                "a"
-            );
-
-
-        a.href =
-            url;
-
-        a.download =
-            "我的课表备份.json";
-
-
-        document
-            .body
-            .appendChild(a);
-
-
-        a.click();
-
-        a.remove();
-
-
-        URL.revokeObjectURL(
-            url
-        );
-
-
-        toast(
-            "课表备份已导出"
-        );
-
-    };
-
-
-/* =========================================================
-   恢复备份
-========================================================= */
-
-document
-    .getElementById(
-        "backupBtn"
-    )
-    .onclick =
-    () => {
-
-        document
-            .getElementById(
-                "backupInput"
-            )
-            .click();
-
-    };
-
-
-document
-    .getElementById(
-        "backupInput"
-    )
-    .addEventListener(
-        "change",
-        event => {
-
-            const file =
-                event.target.files[0];
-
-
-            if(!file){
-
-                return;
-
-            }
-
-
-            const reader =
-                new FileReader();
-
-
-            reader.onload =
-                () => {
-
-                    try{
-
-                        const data =
-                            JSON.parse(
-                                reader.result
-                            );
-
-
-                        if(
-                            !Array.isArray(
-                                data.courses
-                            )
-                        ){
-
-                            throw new Error(
-                                "格式错误"
-                            );
-
-                        }
-
-
-                        scheduleData =
-                            data.courses;
-
-
-                        saveData();
-
-                        showMainPage();
-
-
-                        toast(
-                            `已恢复 ${scheduleData.length} 个课程`
-                        );
-
-                    }catch(error){
-
-                        console.error(
-                            error
-                        );
-
-                        toast(
-                            "备份文件格式错误"
-                        );
-
-                    }
-
-                };
-
-
-            reader.readAsText(
-                file,
-                "utf-8"
-            );
-
-
-            event.target.value =
-                "";
-
-        }
-    );
-
-
-/* =========================================================
-   重新导入
-========================================================= */
-
-document
-    .getElementById(
-        "reimportBtn"
-    )
-    .onclick =
-    () => {
-
-        document
-            .getElementById(
-                "settingsModal"
-            )
-            .classList.add(
-                "hidden"
-            );
-
-
-        document
-            .getElementById(
-                "pasteText"
-            )
-            .value = "";
-
-
-        document
-            .getElementById(
-                "pasteModal"
-            )
-            .classList.remove(
-                "hidden"
-            );
-
-    };
-
-
-/* =========================================================
-   清除
-========================================================= */
-
-document
-    .getElementById(
-        "resetBtn"
-    )
-    .onclick =
-    () => {
-
-        if(
-            !confirm(
-                "确定清除当前课表吗？"
-            )
-        ){
-
-            return;
-
-        }
-
-
-        localStorage.removeItem(
-            STORAGE_KEY
-        );
-
-
-        localStorage.removeItem(
-            "my_schedule_v9"
-        );
-
-        localStorage.removeItem(
-            "my_schedule_v8"
-        );
-
-        localStorage.removeItem(
-            "my_schedule_v7"
-        );
-
-
-        scheduleData = [];
-
-
-        document
-            .getElementById(
-                "settingsModal"
-            )
-            .classList.add(
-                "hidden"
-            );
-
-
-        showImportPage();
-
-
-        toast(
-            "课表已清除"
-        );
-
-    };
-
-
-/* =========================================================
-   点击遮罩关闭
-========================================================= */
-
-document
-    .querySelectorAll(
-        ".modal-mask"
-    )
-    .forEach(
-        mask => {
-
-            mask.addEventListener(
-                "click",
-                event => {
-
-                    if(
-                        event.target === mask
-                    ){
-
-                        mask.classList.add(
-                            "hidden"
-                        );
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-
-/* =========================================================
-   初始化
-========================================================= */
-
-function init(){
+/* =========================
+   首次打开自动导入
+========================= */
+
+function checkFirstImport(){
 
     if(
-        loadData()
+        !courses ||
+        !courses.length
     ){
 
-        showMainPage();
+        setTimeout(
+            () => {
 
-    }else{
+                openImportModal();
 
-        showImportPage();
+                setTimeout(
+                    () => {
+
+                        const input =
+                            document.getElementById(
+                                "scheduleInput"
+                            );
+
+                        if(input){
+                            input.focus();
+                        }
+
+                    },
+                    350
+                );
+
+            },
+            250
+        );
 
     }
 
 }
 
 
-init();
+/* =========================
+   初始化
+========================= */
+
+loadData();
+
+selectedWeek =
+    getCurrentWeek();
+
+renderAll();
+
+
+setTimeout(
+    scrollSelectedWeekIntoView,
+    100
+);
+
+
+checkFirstImport();
+
+
+/* =========================
+   ESC
+========================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.key === "Escape"
+        ){
+
+            document
+                .querySelectorAll(
+                    ".modal-mask.show"
+                )
+                .forEach(
+                    x =>
+                        x.classList.remove(
+                            "show"
+                        )
+                );
+
+        }
+
+    }
+);
 
 </script>
 
