@@ -741,9 +741,9 @@ textarea:focus{
         </div>
 
         <div class="import-tip">
-            支持直接复制教务系统课表。
-            程序会优先读取网页表格结构，
-            同时兼容普通文本。
+            支持直接复制教务系统“我的课表”。
+            程序会优先读取网页表格，
+            也支持手机复制后的普通文本。
         </div>
 
     </div>
@@ -931,9 +931,10 @@ textarea:focus{
             打开教务系统 → 我的课表 → 全部教学周，
             从“节次/周次”开始复制课表。<br><br>
 
-            如果浏览器能够提供网页表格结构，
-            程序会自动按照星期一至星期日读取，
-            不再根据课程顺序猜星期。
+            如果检测到网页表格，
+            会优先使用原始表格结构；
+            如果手机浏览器只提供文字，
+            会使用专用课表文本解析器。
 
         </div>
 
@@ -1128,7 +1129,7 @@ textarea:focus{
    基础
 ========================================================= */
 
-const STORAGE_KEY = "my_schedule_v6";
+const STORAGE_KEY = "my_schedule_v7";
 
 const TOTAL_WEEKS = 18;
 
@@ -1200,7 +1201,7 @@ function getCourseColor(name){
 }
 
 /* =========================================================
-   HTML 转义
+   HTML转义
 ========================================================= */
 
 function escapeHTML(value){
@@ -1604,7 +1605,7 @@ function render(){
 }
 
 /* =========================================================
-   粘贴 HTML 捕获
+   粘贴HTML捕获
 ========================================================= */
 
 document.addEventListener(
@@ -1625,31 +1626,34 @@ document.addEventListener(
 
             const html =
                 event.clipboardData
-                    ?.getData("text/html");
+                    ?.getData("text/html") || "";
 
-            if(
+            pastedHTML =
                 html &&
                 (
-                    html.includes("节次/周次") ||
-                    html.includes("星期一")
+                    html.includes("星期一") ||
+                    html.includes("节次/周次")
                 )
-            ){
+                ? html
+                : "";
 
-                pastedHTML = html;
+            const status =
+                document.getElementById(
+                    "importStatus"
+                );
 
-                const status =
-                    document.getElementById(
-                        "importStatus"
-                    );
+            if(pastedHTML){
 
                 status.classList.add("show");
 
                 status.textContent =
-                    "✓ 已检测到网页表格结构，生成时会优先使用表格数据。";
+                    "✓ 已检测到网页表格结构，将优先使用网页表格解析。";
 
             }else{
 
-                pastedHTML = "";
+                status.classList.remove("show");
+
+                status.textContent = "";
 
             }
 
@@ -1744,7 +1748,7 @@ function parseAndSave(){
 
             /*
              * 第一优先级：
-             * 粘贴事件获得的 HTML 表格
+             * HTML
              */
 
             if(pastedHTML){
@@ -1754,16 +1758,11 @@ function parseAndSave(){
                         pastedHTML
                     );
 
-                console.log(
-                    "HTML解析结果",
-                    result
-                );
-
             }
 
             /*
              * 第二优先级：
-             * 普通文本
+             * 专用文本解析
              */
 
             if(!result.length){
@@ -1773,20 +1772,14 @@ function parseAndSave(){
                         text
                     );
 
-                console.log(
-                    "文本解析结果",
-                    result
-                );
-
             }
 
             if(!result.length){
 
                 alert(
                     "没有识别到课程。\n\n" +
-                    "请确保复制的是教务系统“我的课表”里的课程表，" +
-                    "并且包含“第一节、第二节……”等课表内容。\n\n" +
-                    "如果你是在手机浏览器复制，建议直接从“节次/周次”开始复制。"
+                    "请从教务系统“我的课表”复制，" +
+                    "并确保包含“第一节、第二节……”等课表内容。"
                 );
 
                 return;
@@ -1820,6 +1813,7 @@ function parseAndSave(){
         }finally{
 
             btn.disabled = false;
+
             btn.textContent =
                 "✨ 生成我的课表";
 
@@ -1829,60 +1823,28 @@ function parseAndSave(){
 }
 
 /* =========================================================
-   ★ HTML 表格解析
+   ★ HTML表格解析
 ========================================================= */
 
 function parseScheduleHTML(html){
 
     const result = [];
 
-    const parser =
-        new DOMParser();
+    try{
 
-    const doc =
-        parser.parseFromString(
-            html,
-            "text/html"
-        );
+        const parser =
+            new DOMParser();
 
-    const tables =
-        [...doc.querySelectorAll("table")];
+        const doc =
+            parser.parseFromString(
+                html,
+                "text/html"
+            );
 
-    let table = null;
+        const tables =
+            [...doc.querySelectorAll("table")];
 
-    /*
-     * 找真正的课表表格
-     */
-
-    for(const candidate of tables){
-
-        const text =
-            candidate.innerText ||
-            candidate.textContent ||
-            "";
-
-        if(
-            text.includes("节次/周次") &&
-            text.includes("星期一") &&
-            text.includes("星期二") &&
-            text.includes("星期三") &&
-            text.includes("星期四") &&
-            text.includes("星期五") &&
-            text.includes("星期六") &&
-            text.includes("星期日")
-        ){
-
-            table = candidate;
-            break;
-        }
-    }
-
-    /*
-     * 有些教务系统复制 HTML 时
-     * 表头可能被拆开。
-     */
-
-    if(!table){
+        let table = null;
 
         for(const candidate of tables){
 
@@ -1892,247 +1854,96 @@ function parseScheduleHTML(html){
                 "";
 
             if(
+                text.includes("第一节") &&
                 text.includes("星期一") &&
-                text.includes("星期日") &&
-                text.includes("第一节")
+                text.includes("星期日")
             ){
 
                 table = candidate;
                 break;
-            }
-        }
 
-    }
-
-    if(!table){
-
-        console.log(
-            "没有找到课表HTML table"
-        );
-
-        return result;
-    }
-
-    const rows =
-        [...table.querySelectorAll("tr")];
-
-    /*
-     * 使用 rowspan / colspan
-     * 恢复真正的7天表格。
-     */
-
-    const matrix = [];
-
-    const spans = [];
-
-    for(let r = 0; r < rows.length; r++){
-
-        if(!matrix[r]){
-            matrix[r] = [];
-        }
-
-        let col = 0;
-
-        const cells =
-            [...rows[r].children]
-                .filter(el =>
-                    el.tagName === "TD" ||
-                    el.tagName === "TH"
-                );
-
-        for(const cell of cells){
-
-            while(
-                matrix[r][col] !== undefined
-            ){
-                col++;
             }
 
-            const rowspan =
-                Number(
-                    cell.getAttribute("rowspan")
-                ) || 1;
+        }
 
-            const colspan =
-                Number(
-                    cell.getAttribute("colspan")
-                ) || 1;
+        if(!table){
+            return result;
+        }
 
-            const value =
+        const rows =
+            [...table.querySelectorAll("tr")];
+
+        for(const row of rows){
+
+            const cells =
+                [...row.children]
+                    .filter(el =>
+                        el.tagName === "TD" ||
+                        el.tagName === "TH"
+                    );
+
+            if(cells.length < 2){
+                continue;
+            }
+
+            const first =
                 (
-                    cell.innerText ||
-                    cell.textContent ||
+                    cells[0].innerText ||
+                    cells[0].textContent ||
                     ""
                 ).trim();
 
+            const period =
+                getPeriod(first);
+
+            if(!period){
+                continue;
+            }
+
+            /*
+             * 直接按真实表格列：
+             *
+             * 0 = 节次
+             * 1 = 周一
+             * ...
+             * 7 = 周日
+             */
+
             for(
-                let rr = 0;
-                rr < rowspan;
-                rr++
+                let day = 1;
+                day <= 7;
+                day++
             ){
 
-                if(!matrix[r + rr]){
-                    matrix[r + rr] = [];
+                const cell =
+                    cells[day];
+
+                if(!cell){
+                    continue;
                 }
 
-                for(
-                    let cc = 0;
-                    cc < colspan;
-                    cc++
-                ){
+                const value =
+                    cell.innerText ||
+                    cell.textContent ||
+                    "";
 
-                    matrix[r + rr][col + cc] =
-                        value;
-
-                }
-
-            }
-
-            col += colspan;
-        }
-
-    }
-
-    /*
-     * 找到包含星期表头的行
-     */
-
-    let headerRow = -1;
-
-    let dayStartCol = -1;
-
-    for(let r = 0; r < matrix.length; r++){
-
-        const row =
-            matrix[r] || [];
-
-        const index =
-            row.findIndex(
-                x => String(x).includes("星期一")
-            );
-
-        if(index >= 0){
-
-            const hasSunday =
-                row.some(
-                    x => String(x).includes("星期日")
+                parseCoursesFromCell(
+                    value,
+                    period,
+                    day,
+                    result
                 );
 
-            if(hasSunday){
-
-                headerRow = r;
-                dayStartCol = index;
-                break;
-
             }
 
         }
 
-    }
+    }catch(error){
 
-    /*
-     * 如果没有找到表头，
-     * 尝试直接扫描第一列的节次。
-     */
-
-    if(headerRow < 0){
-
-        for(let r = 0; r < matrix.length; r++){
-
-            const row =
-                matrix[r] || [];
-
-            if(
-                row.some(
-                    x => getPeriod(String(x))
-                )
-            ){
-
-                headerRow = r - 1;
-
-                dayStartCol = 1;
-
-                break;
-
-            }
-
-        }
-
-    }
-
-    if(headerRow < -1){
-        return result;
-    }
-
-    /*
-     * 扫描第一节到第十二节
-     */
-
-    for(let r = headerRow + 1; r < matrix.length; r++){
-
-        const row =
-            matrix[r] || [];
-
-        let period = null;
-
-        let periodCol = -1;
-
-        for(let c = 0; c < row.length; c++){
-
-            const p =
-                getPeriod(
-                    String(row[c] || "")
-                );
-
-            if(p){
-
-                period = p;
-                periodCol = c;
-                break;
-
-            }
-
-        }
-
-        if(!period){
-            continue;
-        }
-
-        /*
-         * 优先认为：
-         *
-         * 节次列后面的7列
-         * 就是星期一到星期日。
-         */
-
-        let startCol =
-            dayStartCol >= 0
-            ? dayStartCol
-            : periodCol + 1;
-
-        /*
-         * 如果发现星期一所在列
-         * 与节次列关系异常，
-         * 使用节次后一列。
-         */
-
-        if(startCol <= periodCol){
-            startCol = periodCol + 1;
-        }
-
-        for(let day = 1; day <= 7; day++){
-
-            const cell =
-                row[startCol + day - 1] || "";
-
-            parseCoursesFromCell(
-                cell,
-                period,
-                day,
-                result
-            );
-
-        }
+        console.error(
+            "HTML解析失败:",
+            error
+        );
 
     }
 
@@ -2155,18 +1966,24 @@ function parseSchoolSchedule(text){
             .replace(/（/g,"(")
             .replace(/）/g,")");
 
+    /*
+     * 只处理课表部分
+     */
+
     const start =
         source.indexOf("节次/周次");
 
     if(start >= 0){
+
         source =
             source.slice(start);
+
     }
 
     const endMarkers = [
+        "课程列表:",
         "课程列表",
-        "实践专周课程列表",
-        "实践专周课程"
+        "实践专周课程列表"
     ];
 
     let end = -1;
@@ -2178,7 +1995,10 @@ function parseSchoolSchedule(text){
 
         if(
             index >= 0 &&
-            (end < 0 || index < end)
+            (
+                end < 0 ||
+                index < end
+            )
         ){
 
             end = index;
@@ -2188,16 +2008,16 @@ function parseSchoolSchedule(text){
     }
 
     if(end >= 0){
+
         source =
             source.slice(0,end);
+
     }
 
     /*
-     * 最重要：
-     * 每一行单独处理。
-     *
-     * 以前的代码把不同节次的 TAB
-     * 拼在一起，导致星期错位。
+     * =====================================================
+     * 第一方案：逐行 TAB 表格
+     * =====================================================
      */
 
     const lines =
@@ -2205,16 +2025,12 @@ function parseSchoolSchedule(text){
 
     for(const raw of lines){
 
-        if(!raw.trim()){
-            continue;
-        }
-
         const parts =
             raw.split("\t");
 
-        /*
-         * 第一列必须是节次。
-         */
+        if(parts.length < 2){
+            continue;
+        }
 
         const period =
             getPeriod(
@@ -2226,134 +2042,23 @@ function parseSchoolSchedule(text){
         }
 
         /*
-         * 第一列之后就是星期一到星期日。
+         * 可能存在多余的空列，
+         * 但正常复制结果就是：
+         *
+         * 节次 + 7个星期
          */
 
-        let cells =
-            parts.slice(1);
+        for(
+            let day = 1;
+            day <= 7;
+            day++
+        ){
 
-        /*
-         * 某些复制结果会在这一行
-         * 再带一次表头。
-         */
-
-        const headerIndex =
-            cells.findIndex(
-                x => String(x).includes("星期一")
-            );
-
-        if(headerIndex >= 0){
-            cells =
-                cells.slice(headerIndex + 1);
-        }
-
-        if(cells.length >= 7){
-
-            for(let day = 1; day <= 7; day++){
-
-                parseCoursesFromCell(
-                    cells[day - 1],
-                    period,
-                    day,
-                    result
-                );
-
-            }
-
-        }
-
-    }
-
-    /*
-     * 如果TAB解析失败，
-     * 尝试识别带“星期X”的文本。
-     */
-
-    if(result.length === 0){
-
-        return parseTextWithWeekday(
-            source
-        );
-
-    }
-
-    return result;
-}
-
-/* =========================================================
-   ★ 带星期文字的备用解析
-========================================================= */
-
-function parseTextWithWeekday(text){
-
-    const result = [];
-
-    const lines =
-        text
-            .split("\n")
-            .map(x => x.trim())
-            .filter(Boolean);
-
-    let period = null;
-
-    let day = null;
-
-    for(const line of lines){
-
-        const p =
-            getPeriod(line);
-
-        if(p){
-
-            period = p;
-            day = null;
-
-            continue;
-        }
-
-        const week =
-            line.match(
-                /星期([一二三四五六日天])/
-            );
-
-        if(week){
-
-            day =
-                weekdayNumber(
-                    week[1]
-                );
-
-            const after =
-                line
-                    .replace(
-                        /^.*?星期[一二三四五六日天]/,
-                        ""
-                    )
-                    .trim();
-
-            if(after){
-
-                parseCoursesFromCell(
-                    after,
-                    period,
-                    day,
-                    result
-                );
-
-            }
-
-            continue;
-        }
-
-        /*
-         * 如果前一行明确告诉我们星期，
-         * 后续课程继续属于这个星期。
-         */
-
-        if(period && day){
+            const cell =
+                parts[day] || "";
 
             parseCoursesFromCell(
-                line,
+                cell,
                 period,
                 day,
                 result
@@ -2363,7 +2068,286 @@ function parseTextWithWeekday(text){
 
     }
 
-    return result;
+    if(result.length){
+
+        return mergeCourses(result);
+
+    }
+
+    /*
+     * =====================================================
+     * 第二方案：按第一节～第十二节切块
+     * =====================================================
+     */
+
+    const periodRegex =
+        /第(一|二|三|四|五|六|七|八|九|十|十一|十二)节/g;
+
+    const matches =
+        [...source.matchAll(periodRegex)];
+
+    for(
+        let i = 0;
+        i < matches.length;
+        i++
+    ){
+
+        const match =
+            matches[i];
+
+        const period =
+            chinesePeriodNumber(
+                match[1]
+            );
+
+        if(!period){
+            continue;
+        }
+
+        const blockStart =
+            match.index +
+            match[0].length;
+
+        const blockEnd =
+            i + 1 < matches.length
+            ? matches[i + 1].index
+            : source.length;
+
+        const block =
+            source.slice(
+                blockStart,
+                blockEnd
+            );
+
+        parsePeriodBlock(
+            block,
+            period,
+            result
+        );
+
+    }
+
+    return mergeCourses(result);
+}
+
+/* =========================================================
+   中文节次
+========================================================= */
+
+function chinesePeriodNumber(value){
+
+    const map = {
+        "一":1,
+        "二":2,
+        "三":3,
+        "四":4,
+        "五":5,
+        "六":6,
+        "七":7,
+        "八":8,
+        "九":9,
+        "十":10,
+        "十一":11,
+        "十二":12
+    };
+
+    return map[value] || null;
+}
+
+/* =========================================================
+   节次识别
+========================================================= */
+
+function getPeriod(text){
+
+    if(!text){
+        return null;
+    }
+
+    const value =
+        String(text).trim();
+
+    let match =
+        value.match(
+            /^第(一|二|三|四|五|六|七|八|九|十|十一|十二)节/
+        );
+
+    if(match){
+
+        return chinesePeriodNumber(
+            match[1]
+        );
+
+    }
+
+    match =
+        value.match(
+            /^第(\d{1,2})节/
+        );
+
+    if(match){
+
+        const n =
+            Number(match[1]);
+
+        if(
+            n >= 1 &&
+            n <= 12
+        ){
+
+            return n;
+
+        }
+
+    }
+
+    return null;
+}
+
+/* =========================================================
+   ★ 解析一个节次区域
+========================================================= */
+
+function parsePeriodBlock(
+    block,
+    period,
+    result
+){
+
+    /*
+     * 先尝试 TAB。
+     */
+
+    const lines =
+        block.split("\n");
+
+    const cells =
+        Array.from(
+            {length:7},
+            () => []
+        );
+
+    /*
+     * 找到包含多个 TAB 的行。
+     */
+
+    let foundTabRow = false;
+
+    for(const raw of lines){
+
+        const parts =
+            raw.split("\t");
+
+        if(parts.length >= 7){
+
+            foundTabRow = true;
+
+            for(
+                let d = 0;
+                d < 7;
+                d++
+            ){
+
+                if(parts[d + 1]){
+
+                    cells[d].push(
+                        parts[d + 1]
+                    );
+
+                }
+
+            }
+
+        }
+
+    }
+
+    if(foundTabRow){
+
+        for(
+            let d = 0;
+            d < 7;
+            d++
+        ){
+
+            parseCoursesFromCell(
+                cells[d].join("\n"),
+                period,
+                d + 1,
+                result
+            );
+
+        }
+
+        return;
+    }
+
+    /*
+     * =====================================================
+     * 如果 TAB 不存在：
+     *
+     * 看是否还有星期一、星期二……
+     * =====================================================
+     */
+
+    const weekdayRegex =
+        /星期([一二三四五六日天])/g;
+
+    const dayMatches =
+        [...block.matchAll(weekdayRegex)];
+
+    if(dayMatches.length){
+
+        for(
+            let i = 0;
+            i < dayMatches.length;
+            i++
+        ){
+
+            const match =
+                dayMatches[i];
+
+            const day =
+                weekdayNumber(
+                    match[1]
+                );
+
+            const start =
+                match.index +
+                match[0].length;
+
+            const end =
+                i + 1 < dayMatches.length
+                ? dayMatches[i + 1].index
+                : block.length;
+
+            const part =
+                block.slice(
+                    start,
+                    end
+                );
+
+            parseCoursesFromCell(
+                part,
+                period,
+                day,
+                result
+            );
+
+        }
+
+        return;
+    }
+
+    /*
+     * =====================================================
+     * 如果星期名称也被浏览器删除，
+     * 这里不能安全猜星期。
+     *
+     * 不乱分配，避免生成错误课表。
+     * =====================================================
+     */
+
 }
 
 /* =========================================================
@@ -2387,7 +2371,7 @@ function weekdayNumber(x){
 }
 
 /* =========================================================
-   课程解析
+   ★ 课程解析
 ========================================================= */
 
 function parseCoursesFromCell(
@@ -2397,17 +2381,21 @@ function parseCoursesFromCell(
     result
 ){
 
-    if(!cell || !period || !day){
+    if(
+        !cell ||
+        !period ||
+        !day
+    ){
         return;
     }
 
     let text =
         String(cell)
+            .replace(/（/g,"(")
+            .replace(/）/g,")")
             .replace(/\r/g," ")
             .replace(/\n/g," ")
             .replace(/\t/g," ")
-            .replace(/（/g,"(")
-            .replace(/）/g,")")
             .replace(/\s+/g," ")
             .trim();
 
@@ -2418,11 +2406,14 @@ function parseCoursesFromCell(
     /*
      * 真实格式：
      *
-     * 课程名称(课程代码)(教师)(周次,教室)
+     * 课程名称(课程代码) (教师)
+     * (周次,教室)
+     *
+     * 一个格子可能有多门。
      */
 
     const regex =
-        /([^()]+?)\s*\(([^()]+)\)\s*\(([^()]+)\)\s*\(([^()]*)\)/g;
+        /([^()]+?)\s*\(([0-9A-Za-z.]+)\)\s*\(([^()]+)\)\s*\(\s*([^()]*)\)/g;
 
     let match;
 
@@ -2450,7 +2441,8 @@ function parseCoursesFromCell(
             !name ||
             !code ||
             !teacher ||
-            !detail
+            !detail ||
+            !detail.weeks.length
         ){
             continue;
         }
@@ -2500,10 +2492,15 @@ function parseDetail(text){
     if(comma >= 0){
 
         weekText =
-            value.slice(0,comma).trim();
+            value.slice(
+                0,
+                comma
+            ).trim();
 
         room =
-            value.slice(comma + 1).trim();
+            value.slice(
+                comma + 1
+            ).trim();
 
     }
 
@@ -2511,7 +2508,9 @@ function parseDetail(text){
         parseWeeks(weekText);
 
     if(!weeks.length){
+
         return null;
+
     }
 
     return {
@@ -2548,6 +2547,10 @@ function parseWeeks(text){
     const set =
         new Set();
 
+    /*
+     * 1-16
+     */
+
     const rangeRegex =
         /(\d{1,2})\s*-\s*(\d{1,2})/g;
 
@@ -2564,8 +2567,10 @@ function parseWeeks(text){
             Number(match[2]);
 
         if(start > end){
+
             [start,end] =
                 [end,start];
+
         }
 
         for(
@@ -2578,18 +2583,32 @@ function parseWeeks(text){
                 i >= 1 &&
                 i <= TOTAL_WEEKS
             ){
+
                 set.add(i);
+
             }
 
         }
 
     }
 
+    /*
+     * 删除范围
+     */
+
     value =
         value.replace(
             rangeRegex,
             " "
         );
+
+    /*
+     * 处理：
+     *
+     * 1 3-8
+     *
+     * 2
+     */
 
     const singles =
         value.match(
@@ -2612,7 +2631,9 @@ function parseWeeks(text){
 
     });
 
-    return [...set].sort(
+    return [
+        ...set
+    ].sort(
         (a,b) => a-b
     );
 }
@@ -2625,6 +2646,10 @@ function getEndPeriod(start){
 
     start =
         Number(start) || 1;
+
+    /*
+     * 你的课表通常连续两节。
+     */
 
     return start < 12
         ? start + 1
@@ -2647,7 +2672,7 @@ function cleanCourseName(name){
 }
 
 /* =========================================================
-   添加
+   添加课程
 ========================================================= */
 
 function addCourse(result,data){
@@ -2657,7 +2682,9 @@ function addCourse(result,data){
         !data.weeks ||
         !data.weeks.length
     ){
+
         return;
+
     }
 
     result.push({
@@ -2674,7 +2701,9 @@ function addCourse(result,data){
 
         teacher:data.teacher || "",
 
-        weeks:[...data.weeks],
+        weeks:[
+            ...data.weeks
+        ],
 
         room:data.room || "",
 
@@ -2686,7 +2715,7 @@ function addCourse(result,data){
 }
 
 /* =========================================================
-   合并
+   合并重复课程
 ========================================================= */
 
 function mergeCourses(list){
@@ -2701,6 +2730,7 @@ function mergeCourses(list){
             course.start,
             course.end,
             course.name,
+            course.code,
             course.teacher,
             course.room
         ].join("|");
@@ -2736,7 +2766,9 @@ function mergeCourses(list){
 
     });
 
-    return [...map.values()];
+    return [
+        ...map.values()
+    ];
 }
 
 /* =========================================================
@@ -2791,8 +2823,11 @@ function closeDrawer(){
 function closeDrawerByBackground(event){
 
     if(event.target.id === "drawer"){
+
         closeDrawer();
+
     }
+
 }
 
 /* =========================================================
@@ -2801,8 +2836,13 @@ function closeDrawerByBackground(event){
 
 function formatWeeks(weeks){
 
-    if(!weeks || !weeks.length){
+    if(
+        !weeks ||
+        !weeks.length
+    ){
+
         return "无";
+
     }
 
     const sorted =
@@ -2827,7 +2867,9 @@ function formatWeeks(weeks){
         const current =
             sorted[i];
 
-        if(current === prev + 1){
+        if(
+            current === prev + 1
+        ){
 
             prev = current;
 
@@ -2840,7 +2882,9 @@ function formatWeeks(weeks){
             );
 
             start = current;
+
             prev = current;
+
         }
 
     }
@@ -2879,7 +2923,9 @@ function closeSettingsByBackground(event){
     if(
         event.target.id === "settingsMask"
     ){
+
         closeSettings();
+
     }
 
 }
@@ -2908,11 +2954,17 @@ function clearSchedule(){
             "确定要清空当前课表吗？"
         )
     ){
+
         return;
+
     }
 
     localStorage.removeItem(
         STORAGE_KEY
+    );
+
+    localStorage.removeItem(
+        "my_schedule_v6"
     );
 
     localStorage.removeItem(
@@ -2953,11 +3005,12 @@ function exportSchedule(){
         );
 
         return;
+
     }
 
     const data = {
 
-        version:6,
+        version:7,
 
         exportedAt:
             new Date().toISOString(),
@@ -3031,7 +3084,9 @@ function handleBackupImport(event){
                         data.courses
                     )
                 ){
+
                     throw new Error();
+
                 }
 
                 courses =
@@ -3124,6 +3179,7 @@ function handleFileImport(event){
                         );
 
                         return;
+
                     }
 
                 }catch(e){
@@ -3133,6 +3189,7 @@ function handleFileImport(event){
                     );
 
                     return;
+
                 }
 
             }
@@ -3149,14 +3206,18 @@ function handleFileImport(event){
             ){
 
                 result =
-                    parseScheduleHTML(text);
+                    parseScheduleHTML(
+                        text
+                    );
 
             }
 
             if(!result.length){
 
                 result =
-                    parseSchoolSchedule(text);
+                    parseSchoolSchedule(
+                        text
+                    );
 
             }
 
@@ -3167,6 +3228,7 @@ function handleFileImport(event){
                 );
 
                 return;
+
             }
 
             courses =
@@ -3241,9 +3303,11 @@ function showMainPage(){
 function init(){
 
     /*
-     * 使用 v6。
-     * 如果以前 v5/v4 有坏数据，
-     * 不会影响新的导入。
+     * 使用 v7。
+     *
+     * 不读取旧 v6，
+     * 避免旧版本错误解析结果
+     * 继续显示。
      */
 
     const saved =
@@ -3268,6 +3332,7 @@ function init(){
                 showMainPage();
 
                 return;
+
             }
 
         }catch(e){
