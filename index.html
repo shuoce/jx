@@ -1,96 +1,1443 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#f5f7fb">
-<title>校园教务 · UI 重构 Demo</title>
+<meta name="description" content="我的课表">
+
+<title>我的课表</title>
+
 <style>
-*{box-sizing:border-box} :root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#7d8799;--line:#e9edf4;--primary:#3867ff;--primary2:#6d8cff;--green:#19a974;--shadow:0 12px 35px rgba(34,48,80,.08)}
-body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text)}
-button{font:inherit;border:0;cursor:pointer}.app{max-width:1100px;margin:auto;min-height:100vh}
-header{padding:28px 24px 18px;display:flex;align-items:center;justify-content:space-between}
-.brand small{color:var(--muted);font-size:13px}.brand h1{font-size:26px;margin:5px 0 0}.avatar{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,#3867ff,#7d98ff);color:#fff;display:grid;place-items:center;font-weight:700;box-shadow:0 8px 20px #3867ff33}
-main{padding:0 24px 100px}.hero{background:linear-gradient(135deg,#315cf5,#6f8fff);color:#fff;border-radius:26px;padding:25px;box-shadow:0 18px 40px #3867ff2b;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-60px;top:-80px;background:#ffffff18}.hero .sub{opacity:.8;font-size:13px}.hero h2{margin:8px 0 5px;font-size:22px}.hero p{margin:0;opacity:.88;font-size:14px}.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.quick button{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 10px;color:var(--text);box-shadow:var(--shadow)}.ico{font-size:22px;display:block;margin-bottom:8px}.quick span:last-child{font-size:13px}
-.section{margin-top:24px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.section-head h3{margin:0;font-size:18px}.more{color:var(--primary);font-size:13px;background:none}
-.course{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:17px;margin-bottom:11px;box-shadow:var(--shadow);display:flex;gap:14px;align-items:center}.time{min-width:58px;text-align:center;color:var(--primary);font-weight:700}.time small{display:block;color:var(--muted);font-weight:500;margin-top:3px}.course-main{flex:1}.course-main strong{font-size:15px}.course-main p{margin:6px 0 0;color:var(--muted);font-size:12px}.tag{padding:6px 9px;border-radius:10px;background:#eef3ff;color:var(--primary);font-size:11px}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}.row{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}.row .left{display:flex;gap:12px;align-items:center}.mini{width:36px;height:36px;border-radius:11px;background:#f0f3f9;display:grid;place-items:center}.row small{color:var(--muted);display:block;margin-top:3px}.score{font-size:18px;font-weight:800}.score.good{color:var(--green)}
-nav{position:fixed;bottom:0;left:0;right:0;z-index:10;background:#ffffffee;backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:9px max(16px,calc((100vw - 700px)/2)) 10px;display:grid;grid-template-columns:repeat(4,1fr)}nav button{background:none;color:#9aa3b3;font-size:11px;padding:3px}nav button b{display:block;font-size:21px;margin-bottom:2px;font-weight:500}nav button.active{color:var(--primary)}
-.page{display:none}.page.active{display:block}.back{background:none;color:var(--primary);padding:8px 0;margin-bottom:8px}.title{font-size:25px;margin:4px 0 18px}.filter{display:flex;gap:8px;overflow:auto;margin-bottom:15px}.filter button{white-space:nowrap;padding:9px 13px;border-radius:12px;background:#fff;border:1px solid var(--line);color:var(--muted)}.filter button.on{background:#eaf0ff;color:var(--primary);border-color:#d7e1ff}
-table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:12px 9px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--muted);font-weight:500;background:#fafbfe}.schedule{overflow:auto}.schedule table{min-width:700px}.schedule td{height:72px;vertical-align:top}.lesson{background:#eef3ff;color:#3159d8;border-radius:10px;padding:7px;font-size:11px}.lesson b{display:block;margin-bottom:4px;font-size:12px}
-.profile{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);padding:20px;border-radius:20px;margin-bottom:15px}.bigavatar{width:62px;height:62px;border-radius:20px;background:linear-gradient(135deg,#315cf5,#89a0ff);color:#fff;display:grid;place-items:center;font-size:24px;font-weight:700}.notice{padding:16px 18px}.notice b{display:block;margin-bottom:5px}.notice p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
-@media(min-width:800px){nav{position:fixed;width:250px;left:calc(50% - 550px);right:auto;top:180px;bottom:auto;border:0;background:transparent;backdrop-filter:none;display:block;padding:0}nav button{display:block;width:100%;text-align:left;padding:14px 18px;border-radius:14px;margin:5px 0}nav button b{display:inline;margin-right:12px}.app{padding-left:220px}main{padding-right:24px}.quick{max-width:650px}.hero{max-width:850px}}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --text: #172033;
+    --sub: #7b8497;
+    --line: #e9edf3;
+    --primary: #3978ff;
+    --primary-light: #edf3ff;
+    --shadow: 0 8px 30px rgba(35, 48, 75, .07);
+}
+
+body {
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "PingFang SC",
+        "Microsoft YaHei",
+        sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* 顶部 */
+.header {
+    padding: 24px 18px 16px;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.subtitle {
+    color: var(--sub);
+    font-size: 13px;
+    margin-top: 7px;
+}
+
+.today-btn {
+    border: 0;
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 9px 13px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* 学期信息 */
+.term-card {
+    background: var(--card);
+    margin: 4px 18px 12px;
+    max-width: 1064px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 18px;
+    padding: 15px 17px;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.term-info small {
+    color: var(--sub);
+    font-size: 12px;
+}
+
+.term-info strong {
+    display: block;
+    margin-top: 5px;
+    font-size: 15px;
+}
+
+.select {
+    border: 1px solid var(--line);
+    background: #fafbfc;
+    border-radius: 10px;
+    padding: 8px 10px;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+}
+
+/* 周选择 */
+.week-bar {
+    max-width: 1064px;
+    margin: 0 auto 14px;
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.week-arrow {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 12px;
+    background: white;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--text);
+}
+
+.week-selector {
+    flex: 1;
+    overflow-x: auto;
+    display: flex;
+    gap: 8px;
+    scrollbar-width: none;
+}
+
+.week-selector::-webkit-scrollbar {
+    display: none;
+}
+
+.week {
+    flex-shrink: 0;
+    padding: 9px 14px;
+    border-radius: 11px;
+    border: 1px solid var(--line);
+    background: white;
+    font-size: 13px;
+    color: var(--sub);
+    cursor: pointer;
+}
+
+.week.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 5px 15px rgba(57,120,255,.22);
+}
+
+/* 课表 */
+.schedule-wrap {
+    max-width: 1064px;
+    margin: auto;
+    padding: 0 18px 40px;
+}
+
+.schedule {
+    background: white;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+/* 横向滚动区域 */
+.table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.grid {
+    min-width: 900px;
+    display: grid;
+    grid-template-columns: 58px repeat(7, 1fr);
+}
+
+/* 星期标题 */
+.day-head {
+    background: #fafbfc;
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    padding: 13px 5px;
+    text-align: center;
+}
+
+.day-head .day {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.day-head .date {
+    color: var(--sub);
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.day-head.today {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+/* 节次 */
+.time {
+    min-height: 100px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--sub);
+    font-size: 11px;
+    background: #fafbfc;
+    padding: 5px;
+}
+
+/* 单元格 */
+.cell {
+    min-height: 100px;
+    padding: 5px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: white;
+}
+
+.empty {
+    height: 100%;
+    min-height: 88px;
+}
+
+/* 课程卡 */
+.course {
+    min-height: 88px;
+    border-radius: 13px;
+    padding: 10px 9px;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+    overflow: hidden;
+}
+
+.course:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 20px rgba(0,0,0,.08);
+}
+
+.course-name {
+    font-size: 13px;
+    font-weight: 750;
+    line-height: 1.4;
+}
+
+.course-teacher {
+    font-size: 11px;
+    margin-top: 7px;
+    opacity: .75;
+}
+
+.course-room {
+    font-size: 11px;
+    margin-top: 4px;
+    opacity: .75;
+}
+
+.course-week {
+    font-size: 10px;
+    margin-top: 6px;
+    opacity: .65;
+}
+
+/* 不同课程颜色 */
+.c1 {
+    background: #eaf1ff;
+    color: #315fb8;
+}
+
+.c2 {
+    background: #e9f8f1;
+    color: #207653;
+}
+
+.c3 {
+    background: #fff2e5;
+    color: #a65d1b;
+}
+
+.c4 {
+    background: #f3eaff;
+    color: #7040a5;
+}
+
+.c5 {
+    background: #ffe9ef;
+    color: #a4425c;
+}
+
+.c6 {
+    background: #e8f7fa;
+    color: #237481;
+}
+
+/* 底部 */
+.footer {
+    text-align: center;
+    color: #a0a8b7;
+    font-size: 11px;
+    padding: 0 18px 30px;
+}
+
+/* 弹窗 */
+.modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, .38);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal-bg.show {
+    display: flex;
+}
+
+.modal {
+    width: min(560px, 100%);
+    background: white;
+    border-radius: 24px 24px 0 0;
+    padding: 22px 20px calc(22px + env(safe-area-inset-bottom));
+    animation: up .22s ease;
+}
+
+@keyframes up {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.modal-code {
+    color: var(--sub);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.detail {
+    margin-top: 20px;
+}
+
+.detail-row {
+    display: flex;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+}
+
+.detail-row span:first-child {
+    width: 70px;
+    color: var(--sub);
+}
+
+.detail-row span:last-child {
+    flex: 1;
+    font-weight: 600;
+}
+
+.close {
+    width: 100%;
+    border: 0;
+    margin-top: 20px;
+    padding: 13px;
+    border-radius: 13px;
+    background: #f1f3f7;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* 手机 */
+@media (max-width: 600px) {
+
+    .header {
+        padding-top: 20px;
+    }
+
+    .title {
+        font-size: 25px;
+    }
+
+    .term-card {
+        border-radius: 16px;
+    }
+
+    .schedule {
+        border-radius: 17px;
+    }
+
+    .grid {
+        min-width: 780px;
+    }
+
+    .course {
+        padding: 9px 7px;
+    }
+
+    .course-name {
+        font-size: 12px;
+    }
+}
 </style>
 </head>
+
 <body>
-<div class="app">
-<header><div class="brand"><small>2026–2027 学年 · 第一学期</small><h1>校园教务</h1></div><div class="avatar">硕</div></header>
-<main>
-<section id="home" class="page active">
-<div class="hero"><div class="sub">欢迎回来，某某同学</div><h2>今天有 4 节课</h2><p>周二 · 9月15日　｜　电气自动化技术 2401</p></div>
-<div class="quick">
-<button onclick="show('schedule')"><span class="ico">📅</span><span>我的课表</span></button>
-<button onclick="show('grades')"><span class="ico">📊</span><span>成绩查询</span></button>
-<button onclick="show('exams')"><span class="ico">📝</span><span>我的考试</span></button>
-<button onclick="show('profile')"><span class="ico">👤</span><span>个人信息</span></button>
+
+<header class="header">
+    <div class="header-top">
+        <div>
+            <div class="title">我的课表</div>
+            <div class="subtitle" id="currentDate">正在加载日期...</div>
+        </div>
+
+        <button class="today-btn" onclick="goToday()">
+            今天
+        </button>
+    </div>
+</header>
+
+
+<!-- 学期 -->
+<section class="term-card">
+
+    <div class="term-info">
+        <small>学年学期</small>
+        <strong>2026-2027学年1学期</strong>
+    </div>
+
+    <select class="select" id="weekSelect" onchange="changeWeek(this.value)">
+        <option value="1">第 1 周</option>
+        <option value="2">第 2 周</option>
+        <option value="3">第 3 周</option>
+        <option value="4">第 4 周</option>
+        <option value="5">第 5 周</option>
+        <option value="6">第 6 周</option>
+        <option value="7">第 7 周</option>
+        <option value="8">第 8 周</option>
+        <option value="9">第 9 周</option>
+        <option value="10">第 10 周</option>
+        <option value="11">第 11 周</option>
+        <option value="12">第 12 周</option>
+        <option value="13">第 13 周</option>
+        <option value="14">第 14 周</option>
+        <option value="15">第 15 周</option>
+        <option value="16">第 16 周</option>
+        <option value="17">第 17 周</option>
+        <option value="18">第 18 周</option>
+    </select>
+
+</section>
+
+
+<!-- 周 -->
+<div class="week-bar">
+
+    <button class="week-arrow" onclick="previousWeek()">‹</button>
+
+    <div class="week-selector" id="weekList"></div>
+
+    <button class="week-arrow" onclick="nextWeek()">›</button>
+
 </div>
-<div class="section"><div class="section-head"><h3>今日课程</h3><button class="more" onclick="show('schedule')">查看课表 →</button></div>
-<div class="course"><div class="time">08:00<small>1–2节</small></div><div class="course-main"><strong>PLC技术与应用</strong><p>第三教学楼 · 1201　王老师</p></div><span class="tag">已结束</span></div>
-<div class="course"><div class="time">10:00<small>3–4节</small></div><div class="course-main"><strong>电力电子技术</strong><p>第三教学楼 · 1201　卫老师</p></div><span class="tag">已结束</span></div>
-<div class="course"><div class="time">14:00<small>5–6节</small></div><div class="course-main"><strong>电机与电气控制</strong><p>实训楼 · 1204　刘亚西</p></div><span class="tag">即将</span></div>
-</div>
-<div class="section"><div class="section-head"><h3>教务通知</h3><button class="more">全部 →</button></div><div class="panel">
-<div class="notice"><b>2026–2027 学年第一学期选课通知</b><p>请同学及时登录系统查看培养方案及选课安排。</p></div>
-<div class="notice" style="border-top:1px solid var(--line)"><b>近期考试安排已更新</b><p>点击“我的考试”查看考试时间与地点。</p></div>
-</div></div>
-</section>
 
-<section id="schedule" class="page">
-<button class="back" onclick="show('home')">← 返回首页</button><h2 class="title">我的课表</h2>
-<div class="filter"><button class="on">第3周</button><button>第4周</button><button>第5周</button><button>2026–2027 第一学期</button></div>
-<div class="panel schedule"><table><thead><tr><th>节次</th><th>周一</th><th>周二</th><th>周三</th><th>周四</th><th>周五</th></tr></thead><tbody>
-<tr><th>1–2</th><td><div class="lesson"><b>PLC技术与应用</b>1201<br>王老师</div></td><td></td><td><div class="lesson"><b>PLC技术与应用</b>1201<br>田老师</div></td><td></td><td><div class="lesson"><b>运动控制技术</b>实训室</div></td></tr>
-<tr><th>3–4</th><td><div class="lesson"><b>自动化生产线</b>实训室</div></td><td><div class="lesson"><b>电工实训</b>1204<br>张玲玲</div></td><td></td><td><div class="lesson"><b>工厂供配电</b>1201</div></td><td></td></tr>
-<tr><th>5–6</th><td></td><td><div class="lesson"><b>电力电子技术</b>1201<br>卫老师</div></td><td><div class="lesson"><b>PLC技术与应用实验</b>实训室</div></td><td></td><td><div class="lesson"><b>电机与电气控制实验</b>实训室</div></td></tr>
-<tr><th>7–8</th><td><div class="lesson"><b>大学生创业基础</b>线上</div></td><td></td><td></td><td><div class="lesson"><b>大学体育</b>体育馆</div></td><td></td></tr>
-</tbody></table></div>
-</section>
 
-<section id="grades" class="page">
-<button class="back" onclick="show('home')">← 返回首页</button><h2 class="title">成绩查询</h2>
-<div class="hero" style="padding:20px;margin-bottom:15px"><div class="sub">本学期</div><h2 style="font-size:30px">平均绩点 3.62</h2><p>已修 18 门课程 · 32 学分</p></div>
-<div class="panel"><div class="row"><div class="left"><div class="mini">📘</div><div><b>电力电子技术</b><small>3 学分 · 卫老师</small></div></div><span class="score good">92</span></div>
-<div class="row"><div class="left"><div class="mini">⚡</div><div><b>PLC技术与应用</b><small>3 学分 · 王老师</small></div></div><span class="score good">88</span></div>
-<div class="row"><div class="left"><div class="mini">🔧</div><div><b>电机与电气控制</b><small>3 学分 · 刘亚西</small></div></div><span class="score">84</span></div>
-<div class="row"><div class="left"><div class="mini">🏃</div><div><b>大学体育3</b><small>1 学分 · 王文渊</small></div></div><span class="score good">95</span></div></div>
-</section>
+<!-- 课表 -->
+<main class="schedule-wrap">
 
-<section id="exams" class="page">
-<button class="back" onclick="show('home')">← 返回首页</button><h2 class="title">我的考试</h2>
-<div class="course"><div class="time">09/22<small>周二</small></div><div class="course-main"><strong>电力电子技术</strong><p>09:00–11:00　第三教学楼 1201</p></div><span class="tag">7天后</span></div>
-<div class="course"><div class="time">09/25<small>周五</small></div><div class="course-main"><strong>PLC技术与应用</strong><p>14:00–16:00　第三教学楼 1201</p></div><span class="tag">10天后</span></div>
-<div class="course"><div class="time">09/29<small>周二</small></div><div class="course-main"><strong>电机与电气控制</strong><p>09:00–11:00　实训楼 1204</p></div><span class="tag">14天后</span></div>
-</section>
+    <section class="schedule">
 
-<section id="profile" class="page">
-<button class="back" onclick="show('home')">← 返回首页</button><h2 class="title">我的</h2>
-<div class="profile"><div class="bigavatar">硕</div><div><h3 style="margin:0 0 5px">某某某</h3><small style="color:var(--muted)">电气自动化技术 · 2401班</small></div></div>
-<div class="panel"><div class="row"><div class="left"><div class="mini">🎓</div><b>学籍信息</b></div><span>›</span></div><div class="row"><div class="left"><div class="mini">📚</div><b>培养计划</b></div><span>›</span></div><div class="row"><div class="left"><div class="mini">📄</div><b>毕业审核</b></div><span>›</span></div><div class="row"><div class="left"><div class="mini">⚙️</div><b>系统设置</b></div><span>›</span></div></div>
-</section>
+        <div class="table-scroll">
+
+            <div class="grid" id="scheduleGrid">
+
+                <!-- JS 自动生成 -->
+
+            </div>
+
+        </div>
+
+    </section>
+
 </main>
-<nav>
-<button class="active" data-page="home" onclick="show('home')"><b>⌂</b>首页</button>
-<button data-page="schedule" onclick="show('schedule')"><b>▦</b>课表</button>
-<button data-page="grades" onclick="show('grades')"><b>◔</b>成绩</button>
-<button data-page="profile" onclick="show('profile')"><b>◎</b>我的</button>
-</nav>
+
+
+<div class="footer">
+    我的课表 · 仅供个人使用
 </div>
+
+
+<!-- 课程详情弹窗 -->
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
+
+    <div class="modal">
+
+        <div class="modal-title" id="modalName"></div>
+        <div class="modal-code" id="modalCode"></div>
+
+        <div class="detail">
+
+            <div class="detail-row">
+                <span>教师</span>
+                <span id="modalTeacher"></span>
+            </div>
+
+            <div class="detail-row">
+                <span>教室</span>
+                <span id="modalRoom"></span>
+            </div>
+
+            <div class="detail-row">
+                <span>时间</span>
+                <span id="modalTime"></span>
+            </div>
+
+            <div class="detail-row">
+                <span>周次</span>
+                <span id="modalWeek"></span>
+            </div>
+
+        </div>
+
+        <button class="close" onclick="hideModal()">
+            关闭
+        </button>
+
+    </div>
+
+</div>
+
+
 <script>
-function show(id){
- document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));
- document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));
- window.scrollTo({top:0,behavior:'smooth'});
+
+/* =========================
+   基础设置
+========================= */
+
+const days = [
+    "星期一",
+    "星期二",
+    "星期三",
+    "星期四",
+    "星期五",
+    "星期六",
+    "星期日"
+];
+
+const periods = [
+    "第一节",
+    "第二节",
+    "第三节",
+    "第四节",
+    "第五节",
+    "第六节",
+    "第七节",
+    "第八节",
+    "第九节",
+    "第十节",
+    "第十一节",
+    "第十二节"
+];
+
+
+/*
+    课程数据
+
+    day:
+    0 = 周一
+    1 = 周二
+    2 = 周三
+    3 = 周四
+    4 = 周五
+    5 = 周六
+    6 = 周日
+
+    start:
+    开始节次
+
+    end:
+    结束节次
+
+    weeks:
+    课程出现在哪些教学周
+*/
+
+const courses = [
+
+    {
+        name: "电力电子技术实验",
+        code: "0101225S.01",
+        teacher: "柳杰",
+        room: "电气传动实训室",
+        day: 0,
+        start: 1,
+        end: 2,
+        weeks: [9,10,11,12,13,14,15,16],
+        color: "c1"
+    },
+
+    {
+        name: "PLC技术与应用",
+        code: "0101227L.01",
+        teacher: "田辈辈",
+        room: "x2213",
+        day: 0,
+        start: 1,
+        end: 2,
+        weeks: [1,2,3,4,5,6,7,8],
+        color: "c2"
+    },
+
+    {
+        name: "电机与电气控制",
+        code: "0101226L.01",
+        teacher: "刘亚茜",
+        room: "x1201",
+        day: 1,
+        start: 1,
+        end: 2,
+        weeks: Array.from({length:16}, (_,i)=>i+1),
+        color: "c3"
+    },
+
+    {
+        name: "PLC技术与应用",
+        code: "0101227L.01",
+        teacher: "田辈辈",
+        room: "x2213",
+        day: 2,
+        start: 1,
+        end: 2,
+        weeks: Array.from({length:16}, (_,i)=>i+1),
+        color: "c2"
+    },
+
+    {
+        name: "电气控制线路安装与调试",
+        code: "0101237X.01",
+        teacher: "郑文杰",
+        room: "可编程控制器实训室",
+        day: 2,
+        start: 1,
+        end: 2,
+        weeks: [18],
+        color: "c4"
+    },
+
+    {
+        name: "电力电子技术",
+        code: "0101225L.01",
+        teacher: "王卫永",
+        room: "x2322",
+        day: 3,
+        start: 1,
+        end: 2,
+        weeks: [1,2,3,4,5,6,7,8],
+        color: "c1"
+    },
+
+    {
+        name: "电气控制线路安装与调试",
+        code: "0101237X.01",
+        teacher: "郑文杰",
+        room: "可编程控制器实训室",
+        day: 3,
+        start: 1,
+        end: 2,
+        weeks: [18],
+        color: "c4"
+    },
+
+    {
+        name: "运动控制技术与应用",
+        code: "0101235L.01",
+        teacher: "张习烨",
+        room: "x2313",
+        day: 4,
+        start: 1,
+        end: 2,
+        weeks: Array.from({length:15}, (_,i)=>i+2),
+        color: "c5"
+    },
+
+    {
+        name: "PLC系统安装与调试",
+        code: "0101239X.04",
+        teacher: "田辈辈",
+        room: "可编程控制器实训室",
+        day: 5,
+        start: 1,
+        end: 2,
+        weeks: [7,8],
+        color: "c6"
+    },
+
+    {
+        name: "自动化生产线安装与调试",
+        code: "0101234L.02",
+        teacher: "侯涛",
+        room: "工业机器人综合应用实训室",
+        day: 0,
+        start: 3,
+        end: 4,
+        weeks: Array.from({length:16}, (_,i)=>i+1),
+        color: "c6"
+    },
+
+    {
+        name: "电气控制线路安装与调试",
+        code: "0101237X.01",
+        teacher: "郑文杰",
+        room: "可编程控制器实训室",
+        day: 2,
+        start: 3,
+        end: 4,
+        weeks: [18],
+        color: "c4"
+    },
+
+    {
+        name: "工厂供配电",
+        code: "0101228L.01",
+        teacher: "张玲玲",
+        room: "x1101",
+        day: 3,
+        start: 3,
+        end: 4,
+        weeks: Array.from({length:16}, (_,i)=>i+1),
+        color: "c3"
+    },
+
+    {
+        name: "工厂供配电",
+        code: "0101228L.01",
+        teacher: "张玲玲",
+        room: "x1101",
+        day: 4,
+        start: 3,
+        end: 4,
+        weeks: [9,10,11,12,13,14,15,16],
+        color: "c3"
+    },
+
+    {
+        name: "电力电子技术",
+        code: "0101225L.01",
+        teacher: "王卫永",
+        room: "x2322",
+        day: 1,
+        start: 5,
+        end: 6,
+        weeks: Array.from({length:16}, (_,i)=>i+1),
+        color: "c1"
+    },
+
+    {
+        name: "PLC技术与应用实验",
+        code: "0101227S.02",
+        teacher: "田辈辈",
+        room: "可编程控制器实训室",
+        day: 2,
+        start: 5,
+        end: 6,
+        weeks: [1,2,3,4,5,6,7,8],
+        color: "c2"
+    },
+
+    {
+        name: "形势与政策3",
+        code: "10001015.22",
+        teacher: "王文消",
+        room: "x2111",
+        day: 3,
+        start: 5,
+        end: 6,
+        weeks: [13,14,15,16],
+        color: "c5"
+    },
+
+    {
+        name: "大学生创业基础",
+        code: "22001006.86",
+        teacher: "李宪",
+        room: "x2111",
+        day: 0,
+        start: 7,
+        end: 8,
+        weeks: Array.from({length:16}, (_,i)=>i+1),
+        color: "c6"
+    },
+
+    {
+        name: "电机与电气控制",
+        code: "0101226L.01",
+        teacher: "刘亚茜",
+        room: "x1101",
+        day: 2,
+        start: 7,
+        end: 8,
+        weeks: [1,3,4,5,6,7,8],
+        color: "c3"
+    },
+
+    {
+        name: "电机与电气控制",
+        code: "0101226L.01",
+        teacher: "刘亚茜",
+        room: "x1201",
+        day: 2,
+        start: 7,
+        end: 8,
+        weeks: [2],
+        color: "c3"
+    },
+
+    {
+        name: "电气控制线路安装与调试",
+        code: "0101237X.01",
+        teacher: "郑文杰",
+        room: "可编程控制器实训室",
+        day: 2,
+        start: 7,
+        end: 8,
+        weeks: [18],
+        color: "c4"
+    },
+
+    {
+        name: "大学体育3",
+        code: "11001003.D1",
+        teacher: "靳周祥",
+        room: "体育场",
+        day: 3,
+        start: 7,
+        end: 8,
+        weeks: Array.from({length:16}, (_,i)=>i+1),
+        color: "c6"
+    },
+
+    {
+        name: "电气控制线路安装与调试",
+        code: "0101237X.01",
+        teacher: "郑文杰",
+        room: "可编程控制器实训室",
+        day: 4,
+        start: 7,
+        end: 8,
+        weeks: [18],
+        color: "c4"
+    },
+
+    {
+        name: "电机与电气控制实验",
+        code: "0101226S.01",
+        teacher: "刘亚茜",
+        room: "电气传动实训室",
+        day: 5,
+        start: 7,
+        end: 8,
+        weeks: [1,2,3,4,5,6,7,8],
+        color: "c3"
+    },
+
+    {
+        name: "电气控制线路安装与调试",
+        code: "0101237X.01",
+        teacher: "郑文杰",
+        room: "可编程控制器实训室",
+        day: 2,
+        start: 9,
+        end: 10,
+        weeks: [18],
+        color: "c4"
+    },
+
+    {
+        name: "电气控制线路安装与调试",
+        code: "0101237X.01",
+        teacher: "郑文杰",
+        room: "可编程控制器实训室",
+        day: 3,
+        start: 9,
+        end: 10,
+        weeks: [18],
+        color: "c4"
+    },
+
+    {
+        name: "运动控制技术与应用",
+        code: "0101235L.01",
+        teacher: "张习烨",
+        room: "x2313",
+        day: 4,
+        start: 9,
+        end: 10,
+        weeks: [1],
+        color: "c5"
+    }
+
+];
+
+
+/* =========================
+   当前周
+========================= */
+
+let currentWeek = 1;
+
+
+/* =========================
+   初始化
+========================= */
+
+function init() {
+
+    showDate();
+
+    renderWeekList();
+
+    renderSchedule();
+
 }
+
+
+/* =========================
+   日期
+========================= */
+
+function showDate() {
+
+    const now = new Date();
+
+    const text =
+        now.getFullYear() +
+        "年" +
+        (now.getMonth() + 1) +
+        "月" +
+        now.getDate() +
+        "日";
+
+    document.getElementById("currentDate").textContent =
+        text + " · 本学期课表";
+
+}
+
+
+/* =========================
+   周选择
+========================= */
+
+function renderWeekList() {
+
+    const box = document.getElementById("weekList");
+
+    box.innerHTML = "";
+
+    for (let i = 1; i <= 18; i++) {
+
+        const el = document.createElement("button");
+
+        el.className =
+            "week" +
+            (i === currentWeek ? " active" : "");
+
+        el.textContent = "第" + i + "周";
+
+        el.onclick = () => {
+
+            currentWeek = i;
+
+            document.getElementById("weekSelect").value = i;
+
+            renderWeekList();
+
+            renderSchedule();
+
+        };
+
+        box.appendChild(el);
+
+    }
+
+}
+
+
+function changeWeek(value) {
+
+    currentWeek = Number(value);
+
+    renderWeekList();
+
+    renderSchedule();
+
+}
+
+
+function previousWeek() {
+
+    if (currentWeek > 1) {
+
+        currentWeek--;
+
+        document.getElementById("weekSelect").value = currentWeek;
+
+        renderWeekList();
+
+        renderSchedule();
+
+    }
+
+}
+
+
+function nextWeek() {
+
+    if (currentWeek < 18) {
+
+        currentWeek++;
+
+        document.getElementById("weekSelect").value = currentWeek;
+
+        renderWeekList();
+
+        renderSchedule();
+
+    }
+
+}
+
+
+/* =========================
+   返回今天
+========================= */
+
+function goToday() {
+
+    /*
+       当前学期开始日期。
+       这里暂时设置为 2026-09-07。
+       后面可以改成真实开学日期。
+    */
+
+    const semesterStart =
+        new Date("2026-09-07T00:00:00");
+
+    const today = new Date();
+
+    const diff =
+        today - semesterStart;
+
+    let week =
+        Math.floor(
+            diff / (7 * 24 * 60 * 60 * 1000)
+        ) + 1;
+
+    if (week < 1) week = 1;
+
+    if (week > 18) week = 18;
+
+    currentWeek = week;
+
+    document.getElementById("weekSelect").value =
+        currentWeek;
+
+    renderWeekList();
+
+    renderSchedule();
+
+}
+
+
+/* =========================
+   判断课程是否存在
+========================= */
+
+function getCourse(day, period) {
+
+    return courses.filter(course => {
+
+        return (
+            course.day === day &&
+            period >= course.start &&
+            period <= course.end &&
+            course.weeks.includes(currentWeek)
+        );
+
+    });
+
+}
+
+
+/* =========================
+   生成课表
+========================= */
+
+function renderSchedule() {
+
+    const grid =
+        document.getElementById("scheduleGrid");
+
+    grid.innerHTML = "";
+
+
+    /*
+       左上角
+    */
+
+    const emptyHead =
+        document.createElement("div");
+
+    emptyHead.className = "day-head";
+
+    emptyHead.innerHTML =
+        "<div class='day'>节次</div>";
+
+    grid.appendChild(emptyHead);
+
+
+    /*
+       星期标题
+    */
+
+    const today =
+        new Date().getDay();
+
+    const todayIndex =
+        today === 0 ? 6 : today - 1;
+
+
+    days.forEach((day, index) => {
+
+        const head =
+            document.createElement("div");
+
+        head.className =
+            "day-head" +
+            (index === todayIndex ? " today" : "");
+
+        head.innerHTML = `
+            <div class="day">${day.replace("星期","")}</div>
+            <div class="date">${getDateForDay(index)}</div>
+        `;
+
+        grid.appendChild(head);
+
+    });
+
+
+    /*
+       12节课
+    */
+
+    periods.forEach((periodName, periodIndex) => {
+
+        const period =
+            periodIndex + 1;
+
+
+        /*
+           左边节次
+        */
+
+        const time =
+            document.createElement("div");
+
+        time.className = "time";
+
+        time.innerHTML =
+            `<span>${periodName}</span>`;
+
+        grid.appendChild(time);
+
+
+        /*
+           7天
+        */
+
+        for (let day = 0; day < 7; day++) {
+
+            const cell =
+                document.createElement("div");
+
+            cell.className = "cell";
+
+
+            const list =
+                getCourse(day, period);
+
+
+            if (list.length === 0) {
+
+                cell.innerHTML =
+                    `<div class="empty"></div>`;
+
+            } else {
+
+                list.forEach(course => {
+
+                    /*
+                       只在课程开始节次显示卡片，
+                       避免同一课程重复显示。
+                    */
+
+                    if (course.start === period) {
+
+                        const card =
+                            document.createElement("div");
+
+                        card.className =
+                            "course " +
+                            course.color;
+
+                        card.innerHTML = `
+
+                            <div class="course-name">
+                                ${course.name}
+                            </div>
+
+                            <div class="course-teacher">
+                                ${course.teacher}
+                            </div>
+
+                            <div class="course-room">
+                                📍 ${course.room}
+                            </div>
+
+                            <div class="course-week">
+                                第 ${formatWeeks(course.weeks)} 周
+                            </div>
+
+                        `;
+
+                        card.onclick = () =>
+                            showCourse(course);
+
+                        /*
+                           如果跨两节，让卡片更高
+                        */
+
+                        if (course.end > course.start) {
+
+                            card.style.minHeight =
+                                (88 +
+                                (course.end -
+                                course.start) * 94) + "px";
+
+                        }
+
+                        cell.appendChild(card);
+
+                    }
+
+                });
+
+            }
+
+            grid.appendChild(cell);
+
+        }
+
+    });
+
+}
+
+
+/* =========================
+   周次格式化
+========================= */
+
+function formatWeeks(weeks) {
+
+    if (!weeks.length) return "";
+
+    /*
+       连续周合并
+       例如：
+       [1,2,3,4,5,7,8]
+       → 1-5、7-8
+    */
+
+    const result = [];
+
+    let start = weeks[0];
+
+    let prev = weeks[0];
+
+
+    for (let i = 1; i < weeks.length; i++) {
+
+        if (weeks[i] === prev + 1) {
+
+            prev = weeks[i];
+
+        } else {
+
+            result.push(
+                start === prev
+                    ? start
+                    : start + "-" + prev
+            );
+
+            start = weeks[i];
+
+            prev = weeks[i];
+
+        }
+
+    }
+
+
+    result.push(
+        start === prev
+            ? start
+            : start + "-" + prev
+    );
+
+
+    return result.join("、");
+
+}
+
+
+/* =========================
+   星期日期
+========================= */
+
+function getDateForDay(index) {
+
+    /*
+       当前周暂时以 2026-09-07 为第1周。
+    */
+
+    const start =
+        new Date("2026-09-07T00:00:00");
+
+    const date =
+        new Date(start);
+
+    date.setDate(
+        date.getDate() +
+        (currentWeek - 1) * 7 +
+        index
+    );
+
+    return (
+        (date.getMonth() + 1) +
+        "/" +
+        date.getDate()
+    );
+
+}
+
+
+/* =========================
+   课程详情
+========================= */
+
+function showCourse(course) {
+
+    document.getElementById("modalName").textContent =
+        course.name;
+
+    document.getElementById("modalCode").textContent =
+        course.code;
+
+    document.getElementById("modalTeacher").textContent =
+        course.teacher;
+
+    document.getElementById("modalRoom").textContent =
+        course.room;
+
+    document.getElementById("modalTime").textContent =
+        `${days[course.day]} · 第${course.start}-${course.end}节`;
+
+    document.getElementById("modalWeek").textContent =
+        `第 ${formatWeeks(course.weeks)} 周`;
+
+    document.getElementById("modalBg")
+        .classList.add("show");
+
+}
+
+
+function hideModal() {
+
+    document.getElementById("modalBg")
+        .classList.remove("show");
+
+}
+
+
+function closeModal(event) {
+
+    if (event.target.id === "modalBg") {
+
+        hideModal();
+
+    }
+
+}
+
+
+/* =========================
+   启动
+========================= */
+
+init();
+
 </script>
+
 </body>
 </html>
