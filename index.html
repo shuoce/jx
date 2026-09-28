@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07111f">
-<meta name="description" content="我的课表">
+<meta name="description" content="我的课表 - 智能大学课表系统">
 <title>我的课表</title>
 
 <style>
@@ -114,6 +114,10 @@ button{
     color:white;
     background:rgba(255,255,255,.07);
     border:1px solid rgba(255,255,255,.07);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
 }
 
 .today-panel{
@@ -168,6 +172,11 @@ button{
     background:rgba(255,255,255,.065);
     border:1px solid rgba(255,255,255,.08);
     cursor:pointer;
+    transition:transform .15s ease;
+}
+
+.today-course:hover{
+    transform:translateY(-2px);
 }
 
 .today-course:before{
@@ -177,7 +186,7 @@ button{
     top:0;
     bottom:0;
     width:4px;
-    background:linear-gradient(var(--primary),var(--primary2));
+    background:var(--theme-grad, linear-gradient(var(--primary),var(--primary2)));
 }
 
 .today-course-name{
@@ -219,6 +228,11 @@ button{
     color:#dce7fa;
     background:rgba(255,255,255,.065);
     border:1px solid var(--line);
+    transition:background .2s;
+}
+
+.control-btn:hover{
+    background:rgba(255,255,255,.1);
 }
 
 .control-btn.primary{
@@ -253,8 +267,8 @@ button{
 
 .weeks{
     display:grid;
-    grid-template-columns:repeat(10,1fr);
-    gap:6px;
+    grid-template-columns:repeat(18,1fr);
+    gap:5px;
 }
 
 .week-btn{
@@ -264,16 +278,19 @@ button{
     background:rgba(255,255,255,.045);
     border:1px solid transparent;
     font-size:12px;
+    padding:0;
 }
 
 .week-btn.current{
     color:#a9c1ff;
-    border-color:rgba(91,140,255,.4);
+    border-color:rgba(91,140,255,.45);
+    font-weight:bold;
 }
 
 .week-btn.active{
     color:white;
     background:linear-gradient(135deg,var(--primary),var(--primary2));
+    font-weight:bold;
 }
 
 .schedule-wrap{
@@ -309,7 +326,7 @@ button{
 }
 
 .schedule thead th:first-child{
-    width:82px;
+    width:90px;
     position:sticky;
     left:0;
     z-index:8;
@@ -341,76 +358,98 @@ button{
 }
 
 .period-cell{
-    width:82px;
-    min-width:82px;
+    width:90px;
+    min-width:90px;
     position:sticky;
     left:0;
     z-index:4;
     text-align:center;
     background:rgba(9,20,34,.98);
+    padding:8px 2px;
 }
 
 .period-cell.part-start{
-    border-top:2px solid rgba(255,255,255,.1);
+    border-top:2px solid rgba(255,255,255,.15);
 }
 
 .period-num{
-    font-size:15px;
+    font-size:14px;
     font-weight:900;
 }
 
+.period-time{
+    margin-top:2px;
+    color:#5a6e87;
+    font-size:9px;
+    line-height:1.1;
+}
+
 .period-part{
-    margin-top:4px;
-    color:#7187a3;
+    margin-top:3px;
+    color:#8fa1ba;
     font-size:10px;
 }
 
 .schedule td{
-    height:72px;
-    padding:5px;
+    height:74px;
+    padding:4px;
     vertical-align:top;
     background:rgba(7,16,29,.44);
 }
 
 .schedule td.today-col{
-    background:rgba(91,140,255,.055);
+    background:rgba(91,140,255,.04);
 }
 
 .course-card{
     position:relative;
     height:100%;
-    min-height:60px;
+    min-height:64px;
     overflow:hidden;
-    padding:10px 9px;
-    border:1px solid rgba(255,255,255,.09);
+    padding:9px;
+    border:1px solid var(--theme-border, rgba(255,255,255,.1));
     border-radius:13px;
-    background:linear-gradient(135deg,rgba(49,82,137,.76),rgba(35,50,79,.8));
-    box-shadow:0 7px 18px rgba(0,0,0,.15);
+    background:var(--theme-bg, linear-gradient(135deg,rgba(49,82,137,.76),rgba(35,50,79,.8)));
+    box-shadow:0 6px 16px rgba(0,0,0,.15);
     cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
 }
 
 .course-card.today-highlight{
-    border-color:rgba(91,140,255,.8);
-    box-shadow:0 0 0 1px rgba(91,140,255,.15),0 8px 25px rgba(44,100,255,.24);
+    border-color:rgba(91,140,255,.9);
+    box-shadow:0 0 0 1px rgba(91,140,255,.2),0 8px 25px rgba(44,100,255,.3);
 }
 
 .course-name{
-    padding-right:18px;
-    font-size:13px;
-    line-height:1.4;
+    font-size:12px;
+    line-height:1.35;
     font-weight:900;
+    color:#ffffff;
+    word-break:break-all;
+}
+
+.course-bottom{
+    margin-top:6px;
 }
 
 .course-teacher{
-    margin-top:6px;
-    color:#aebed4;
+    color:rgba(255,255,255,.75);
     font-size:10px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
 .course-room{
-    margin-top:5px;
-    color:#d2def0;
+    margin-top:2px;
+    color:rgba(255,255,255,.95);
     font-size:10px;
+    font-weight:500;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
 .modal-mask{
@@ -457,6 +496,7 @@ button{
     border-radius:12px;
     color:#cbd7e9;
     background:rgba(255,255,255,.07);
+    font-size:20px;
 }
 
 .detail-item{
@@ -533,7 +573,7 @@ textarea{
     transform:translate(-50%,0);
 }
 
-@media(max-width:700px){
+@media(max-width:768px){
     .app{
         padding:9px 7px 35px;
     }
@@ -593,13 +633,13 @@ textarea{
             <div class="logo">课</div>
             <div>
                 <h1 class="title">我的课表</h1>
-                <div class="subtitle">2026-2027 学年第一学期</div>
+                <div class="subtitle" id="termSubtitle">2026-2027 学年第一学期</div>
             </div>
         </div>
 
         <div class="header-actions">
-            <button class="icon-btn" onclick="openImportModal()">⇩</button>
-            <button class="icon-btn" onclick="openSettings()">⚙</button>
+            <button class="icon-btn" onclick="openImportModal()" title="导入课表">⇩</button>
+            <button class="icon-btn" onclick="openSettings()" title="设置">⚙</button>
         </div>
     </div>
 </header>
@@ -616,10 +656,11 @@ textarea{
 </section>
 
 <div class="controls">
-    <button class="control-btn primary" onclick="goToday()">📅 今天</button>
-    <button class="control-btn" onclick="openImportModal()">📥 导入课表</button>
-    <button class="control-btn" onclick="exportJSON()">💾 备份</button>
-    <button class="control-btn" onclick="document.getElementById('backupFile').click()">📂 导入备份</button>
+    <button class="control-btn primary" onclick="goToday()">📅 回到今天</button>
+    <button class="control-btn" onclick="openImportModal()">📥 导入教务课表</button>
+    <button class="control-btn" onclick="exportICS()">🗓 导出系统日历</button>
+    <button class="control-btn" onclick="exportJSON()">💾 备份配置</button>
+    <button class="control-btn" onclick="document.getElementById('backupFile').click()">📂 恢复备份</button>
     <input id="backupFile" type="file" accept=".json" hidden onchange="importJSON(event)">
 </div>
 
@@ -631,7 +672,7 @@ textarea{
     <div class="weeks" id="weeks"></div>
 </section>
 
-<section class="schedule-wrap">
+<section class="schedule-wrap" id="scheduleWrap">
 <table class="schedule">
 <thead>
 <tr>
@@ -661,11 +702,11 @@ textarea{
     <div class="detail-item">
         <div class="detail-label">使用方法</div>
         <div class="detail-value">
-            在教务系统选择「全部教学周」，复制完整课表后直接粘贴。
+            在教务系统选择「全部教学周」，全选并复制课表整页表格，直接粘贴到下方输入框解析。
         </div>
     </div>
 
-    <textarea id="scheduleInput" placeholder="把教务系统复制出来的完整课表粘贴到这里……"></textarea>
+    <textarea id="scheduleInput" placeholder="把从教务系统复制的整张课表文字直接粘贴在此……"></textarea>
 
     <div class="modal-actions">
         <button class="secondary-btn" onclick="closeModal('importModal')">取消</button>
@@ -687,32 +728,33 @@ textarea{
 <div class="modal-mask" id="settingsModal">
 <div class="modal">
     <div class="modal-header">
-        <div class="modal-title">设置</div>
+        <div class="modal-title">系统设置</div>
         <button class="close" onclick="closeModal('settingsModal')">×</button>
     </div>
 
     <div class="detail-item">
-        <div class="detail-label">第一周基准</div>
-        <div class="detail-value">2026年9月1日</div>
-    </div>
-
-    <div class="detail-item">
-        <div class="detail-label">日期</div>
-        <div class="detail-value">第3周星期二 = 2026年9月15日</div>
-    </div>
-
-    <div class="detail-item">
-        <div class="detail-label">节次</div>
+        <div class="detail-label">学期第一周基准日</div>
         <div class="detail-value">
-            1–4节：上午<br>
-            5–8节：下午<br>
-            9–12节：晚上
+            <input type="date" id="semesterStartInput" style="background:#162438;border:1px solid var(--line);color:white;padding:6px 10px;border-radius:8px;">
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">周次换算会自动以该基准日所在当周周一为起点计算。</div>
+        </div>
+    </div>
+
+    <div class="detail-item">
+        <div class="detail-label">标准节次作息定义</div>
+        <div class="detail-value" style="font-size:12px;line-height:1.7;">
+            第1节: 08:00-08:45 | 第2节: 08:55-09:40<br>
+            <strong style="color:#a9c1ff;">第3节: 10:10-10:55 | 第4节: 11:05-11:50</strong><br>
+            <strong style="color:#a9c1ff;">第5节: 15:00-15:45</strong> | 第6节: 15:55-16:40<br>
+            第7节: 17:10-17:55 | <strong style="color:#a9c1ff;">第8节: 18:05-18:50</strong><br>
+            第9节: 19:30-20:15 | 第10节: 20:25-21:10<br>
+            第11节: 21:20-22:05 | 第12节: 22:15-23:00
         </div>
     </div>
 
     <div class="modal-actions">
-        <button class="secondary-btn" onclick="clearAllData()">清空课表</button>
-        <button class="primary-btn" onclick="closeModal('settingsModal')">完成</button>
+        <button class="secondary-btn" onclick="clearAllData()">清空所有课表</button>
+        <button class="primary-btn" onclick="saveSettings()">保存并生效</button>
     </div>
 </div>
 </div>
@@ -720,34 +762,50 @@ textarea{
 <div class="toast" id="toast"></div>
 
 <script>
+/* =========================
+   校准后的标准作息时间表
+========================= */
 
-const semesterStart = new Date("2026-09-01T00:00:00");
-
-const STORAGE_KEY = "shuoce_schedule_v8";
+let SEMESTER_START_STR = "2026-09-01";
+const STORAGE_KEY = "shuoce_schedule_v9";
 
 const DAY_NAMES = [
     "星期一","星期二","星期三",
     "星期四","星期五","星期六","星期日"
 ];
 
-const CN_PERIOD = {
-    "一":1,
-    "二":2,
-    "三":3,
-    "四":4,
-    "五":5,
-    "六":6,
-    "七":7,
-    "八":8,
-    "九":9,
-    "十":10,
-    "十一":11,
-    "十二":12
+const PERIOD_TIMES = {
+    1: { start: "08:00", end: "08:45" },
+    2: { start: "08:55", end: "09:40" },
+    3: { start: "10:10", end: "10:55" },
+    4: { start: "11:05", end: "11:50" },
+    5: { start: "15:00", end: "15:45" },
+    6: { start: "15:55", end: "16:40" },
+    7: { start: "17:10", end: "17:55" },
+    8: { start: "18:05", end: "18:50" },
+    9: { start: "19:30", end: "20:15" },
+    10: { start: "20:25", end: "21:10" },
+    11: { start: "21:20", end: "22:05" },
+    12: { start: "22:15", end: "23:00" }
 };
 
-let courses = [];
-let selectedWeek = getCurrentWeek();
+const CN_PERIOD = {
+    "一":1,"二":2,"三":3,"四":4,"五":5,"六":6,
+    "七":7,"八":8,"九":9,"十":10,"十一":11,"十二":12
+};
 
+const COLOR_PALETTES = [
+    { bg: "linear-gradient(135deg, rgba(74, 58, 255, 0.72), rgba(49, 102, 237, 0.78))", border: "rgba(102, 126, 234, 0.45)", dot: "#667eea" },
+    { bg: "linear-gradient(135deg, rgba(16, 140, 116, 0.75), rgba(46, 172, 120, 0.8))", border: "rgba(46, 213, 115, 0.45)", dot: "#2ed573" },
+    { bg: "linear-gradient(135deg, rgba(224, 86, 36, 0.74), rgba(243, 156, 18, 0.8))", border: "rgba(243, 156, 18, 0.45)", dot: "#f39c12" },
+    { bg: "linear-gradient(135deg, rgba(179, 43, 115, 0.74), rgba(142, 68, 173, 0.8))", border: "rgba(155, 89, 182, 0.45)", dot: "#9b59b6" },
+    { bg: "linear-gradient(135deg, rgba(14, 110, 184, 0.75), rgba(0, 168, 204, 0.8))", border: "rgba(0, 168, 204, 0.45)", dot: "#00a8cc" },
+    { bg: "linear-gradient(135deg, rgba(192, 57, 43, 0.75), rgba(235, 77, 75, 0.8))", border: "rgba(235, 77, 75, 0.45)", dot: "#eb4d4b" },
+    { bg: "linear-gradient(135deg, rgba(87, 75, 144, 0.75), rgba(120, 111, 166, 0.8))", border: "rgba(120, 111, 166, 0.45)", dot: "#786fa6" }
+];
+
+let courses = [];
+let selectedWeek = 1;
 
 function escapeHTML(value){
     return String(value ?? "")
@@ -758,1743 +816,718 @@ function escapeHTML(value){
         .replace(/'/g,"&#039;");
 }
 
-
-/* =========================
-   周次
-========================= */
-
-function getCurrentWeek(){
-
-    const now = new Date();
-
-    const today = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate()
-    );
-
-    const start = new Date(
-        semesterStart.getFullYear(),
-        semesterStart.getMonth(),
-        semesterStart.getDate()
-    );
-
-    const diff = Math.floor(
-        (today - start) / 86400000
-    );
-
-    if(diff < 0) return 1;
-
-    return Math.floor(diff / 7) + 1;
+function getCourseTheme(courseName){
+    if(!courseName) return COLOR_PALETTES[0];
+    let hash = 0;
+    for(let i=0; i<courseName.length; i++){
+        hash = courseName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % COLOR_PALETTES.length;
+    return COLOR_PALETTES[index];
 }
 
+/* ===================================================
+   周次计算机制 (以第1周周一绝对0点时间为锚点)
+=================================================== */
 
-function getWeekMonday(week){
-
-    const base = new Date(
-        semesterStart.getFullYear(),
-        semesterStart.getMonth(),
-        semesterStart.getDate()
-    );
-
-    const day = base.getDay();
-
+function getFirstMonday(){
+    const [y, m, d] = SEMESTER_START_STR.split("-").map(Number);
+    const date = new Date(y, m - 1, d, 0, 0, 0, 0);
+    const day = date.getDay();
     const offset = day === 0 ? -6 : 1 - day;
-
-    base.setDate(
-        base.getDate() +
-        offset +
-        (week - 1) * 7
-    );
-
-    base.setHours(0,0,0,0);
-
-    return base;
-}
-
-
-function getDateForDay(week,day){
-
-    const monday = getWeekMonday(week);
-
-    const date = new Date(monday);
-
-    date.setDate(
-        monday.getDate() + day - 1
-    );
-
+    date.setDate(date.getDate() + offset);
     return date;
 }
 
+function getCurrentWeek(){
+    const now = new Date();
+    const todayZero = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    const firstMonday = getFirstMonday();
+    const diffDays = Math.floor((todayZero - firstMonday) / 86400000);
+    if(diffDays < 0) return 1;
+    const week = Math.floor(diffDays / 7) + 1;
+    return Math.min(Math.max(week, 1), 18);
+}
+
+function getWeekMonday(week){
+    const monday = getFirstMonday();
+    monday.setDate(monday.getDate() + (week - 1) * 7);
+    return monday;
+}
+
+function getDateForDay(week, day){
+    const monday = getWeekMonday(week);
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + day - 1);
+    return date;
+}
 
 function formatDate(date){
-
     return `${date.getMonth()+1}月${date.getDate()}日`;
 }
 
-
-function getDayNumber(date=new Date()){
-
+function getDayNumber(date = new Date()){
     const day = date.getDay();
-
     return day === 0 ? 7 : day;
 }
 
-
 function getPart(period){
-
     if(period <= 4) return "上午";
     if(period <= 8) return "下午";
     return "晚上";
 }
 
-
 /* =========================
-   节次
-========================= */
-
-function parsePeriod(text){
-
-    if(!text) return null;
-
-    text = String(text).trim();
-
-    const cn = text.match(
-        /第\s*(十一|十二|十|一|二|三|四|五|六|七|八|九)\s*节/
-    );
-
-    if(cn){
-        return CN_PERIOD[cn[1]];
-    }
-
-    const number = text.match(/\b(1[0-2]|[1-9])\b/);
-
-    return number ? Number(number[1]) : null;
-}
-
-
-/* =========================
-   周次
+   文本解析机制
 ========================= */
 
 function parseWeeks(text){
-
     if(!text) return [];
-
-    text = String(text)
-        .replace(/第/g,"")
-        .replace(/周/g,"")
-        .replace(/，/g,",")
-        .trim();
-
+    text = String(text).replace(/第/g,"").replace(/周/g,"").replace(/，/g,",").trim();
     const result = [];
 
     for(const m of text.matchAll(/(\d+)\s*[-~—至]\s*(\d+)/g)){
-
-        let a = Number(m[1]);
-        let b = Number(m[2]);
-
-        if(a > b){
-            [a,b] = [b,a];
-        }
-
-        for(let i=a;i<=b;i++){
-            if(i >= 1 && i <= 18){
-                result.push(i);
-            }
+        let a = Number(m[1]), b = Number(m[2]);
+        if(a > b) [a, b] = [b, a];
+        for(let i=a; i<=b; i++){
+            if(i >= 1 && i <= 18) result.push(i);
         }
     }
 
-    const rest = text.replace(
-        /\d+\s*[-~—至]\s*\d+/g,
-        " "
-    );
-
+    const rest = text.replace(/\d+\s*[-~—至]\s*\d+/g, " ");
     for(const m of rest.matchAll(/\d+/g)){
-
         const n = Number(m[0]);
-
-        if(n >= 1 && n <= 18){
-            result.push(n);
-        }
+        if(n >= 1 && n <= 18) result.push(n);
     }
-
     return [...new Set(result)].sort((a,b)=>a-b);
 }
 
-
-/* =========================
-   地点
-========================= */
-
 function normalizeRoom(raw){
-
-    if(!raw) return "未设置";
-
-    let room = String(raw)
-        .trim()
-        .replace(/\s+/g," ");
-
-    room = room.replace(/[)\]}>]+$/,"");
-
-    /*
-     * 体育场
-     */
-    if(room.includes("体育场")){
-        return "体育场";
-    }
-
-    /*
-     * 有正式名称的实训室/实验室：
-     *
-     * 电气传动实训室(xs1204-2)
-     *
-     * 直接取括号前的名称。
-     */
-    if(
-        room.includes("实训室") ||
-        room.includes("实验室")
-    ){
-
-        const name = room
-            .split("(")[0]
-            .trim();
-
+    if(!raw) return "未设置地点";
+    let room = String(raw).trim().replace(/\s+/g," ").replace(/[)\]}>]+$/,"");
+    if(room.includes("体育场")) return "体育场";
+    if(room.includes("实训室") || room.includes("实验室")){
+        const name = room.split("(")[0].trim();
         if(name) return name;
     }
-
-    /*
-     * x1201(x1201)
-     */
-    let match = room.match(
-        /^(x\d{4})\(\1\)$/i
-    );
-
+    let match = room.match(/^x(\d)(\d{3})$/i);
     if(match){
-        room = match[1];
-    }
-
-    /*
-     * x1201 → 一教201
-     */
-    match = room.match(
-        /^x(\d)(\d{3})$/i
-    );
-
-    if(match){
-
-        const building = {
-            "1":"一",
-            "2":"二",
-            "3":"三",
-            "4":"四",
-            "5":"五"
-        }[match[1]] || match[1];
-
+        const building = {"1":"一","2":"二","3":"三","4":"四","5":"五"}[match[1]] || match[1];
         return `${building}教${match[2]}`;
     }
-
-    /*
-     * xs1203 → 203
-     * xs1204-2 → 204
-     * xs1102-1 → 102
-     */
-    match = room.match(
-        /^xs\d(\d{3})(?:-\d+)?$/i
-    );
-
-    if(match){
-        return match[1];
-    }
-
+    match = room.match(/^xs\d(\d{3})(?:-\d+)?$/i);
+    if(match) return match[1];
     return room;
 }
 
-
-/* =========================
-   括号解析
-========================= */
-
-function readBalanced(text,start){
-
-    if(text[start] !== "("){
-        return null;
-    }
-
+function readBalanced(text, start){
+    if(text[start] !== "(") return null;
     let depth = 0;
-
-    for(let i=start;i<text.length;i++){
-
-        const c = text[i];
-
-        if(c === "("){
-            depth++;
-        }
-        else if(c === ")"){
-
+    for(let i=start; i<text.length; i++){
+        if(text[i] === "(") depth++;
+        else if(text[i] === ")"){
             depth--;
-
-            if(depth === 0){
-
-                return {
-                    content:text.slice(start+1,i),
-                    end:i+1
-                };
-            }
+            if(depth === 0) return { content: text.slice(start+1, i), end: i+1 };
         }
     }
-
-    /*
-     * 教务系统复制文本偶尔少一个右括号。
-     * 这种情况直接读到末尾。
-     */
-    return {
-        content:text.slice(start+1),
-        end:text.length
-    };
+    return { content: text.slice(start+1), end: text.length };
 }
 
-
-/* =========================
-   找课程代码
-========================= */
-
-const COURSE_CODE_RE =
-    /\(([0-9][A-Za-z0-9]*\.[A-Za-z0-9]+)\)/g;
-
+const COURSE_CODE_RE = /\(([0-9A-Za-z]+(?:\.[A-Za-z0-9]+)?)\)/g;
 
 function findCourseHeaders(text){
-
     const result = [];
-
     COURSE_CODE_RE.lastIndex = 0;
-
     let match;
 
-    while(
-        (match = COURSE_CODE_RE.exec(text))
-    ){
-
+    while((match = COURSE_CODE_RE.exec(text))){
         const code = match[1];
-
         let nameStart = match.index - 1;
-
-        while(
-            nameStart >= 0 &&
-            /\s/.test(text[nameStart])
-        ){
-            nameStart--;
-        }
-
-        /*
-         * 找课程名称起点。
-         *
-         * 课程名称通常从：
-         * 行首 / 上一个换行 / +
-         * 开始。
-         */
+        while(nameStart >= 0 && /\s/.test(text[nameStart])) nameStart--;
         let start = nameStart;
-
         while(start >= 0){
-
             const c = text[start];
-
-            if(
-                c === "\n" ||
-                c === "\r" ||
-                c === "+"
-            ){
+            if(c === "\n" || c === "\r" || c === "+"){
                 start++;
                 break;
             }
-
             start--;
         }
-
-        if(start < 0){
-            start = 0;
-        }
-
-        let name =
-            text.slice(
-                start,
-                match.index
-            ).trim();
-
-        /*
-         * 清除可能残留的分隔符。
-         */
-        name = name
-            .replace(/^[+\s]+/,"")
-            .replace(/[+\s]+$/,"");
-
-        /*
-         * 如果名称前混入了地点信息，
-         * 只保留最后一个明显的课程名称片段。
-         */
+        if(start < 0) start = 0;
+        let name = text.slice(start, match.index).trim().replace(/^[+\s]+/,"").replace(/[+\s]+$/,"");
         if(name.includes("\n")){
-            const arr = name
-                .split(/\n+/)
-                .map(x=>x.trim())
-                .filter(Boolean);
-
+            const arr = name.split(/\n+/).map(x=>x.trim()).filter(Boolean);
             name = arr[arr.length-1] || name;
         }
-
-        result.push({
-            name,
-            code,
-            codeStart:match.index,
-            codeEnd:COURSE_CODE_RE.lastIndex
-        });
+        result.push({ name, code, codeStart: match.index, codeEnd: COURSE_CODE_RE.lastIndex });
     }
-
     return result;
 }
 
-
-/* =========================
-   解析一个星期单元格
-========================= */
-
-function parseCell(cell,day,period){
-
-    if(!cell || !cell.trim()){
-        return [];
-    }
-
-    /*
-     * 保留换行。
-     * 换行对课程之间的分隔非常重要。
-     */
-    const text = cell
-        .replace(/\r/g,"")
-        .trim();
-
+function parseCell(cell, day, period){
+    if(!cell || !cell.trim()) return [];
+    const text = cell.replace(/\r/g,"").trim();
     const headers = findCourseHeaders(text);
-
     const result = [];
 
-    for(let i=0;i<headers.length;i++){
-
+    for(let i=0; i<headers.length; i++){
         const h = headers[i];
-
-        const end =
-            i + 1 < headers.length
-                ? headers[i+1].codeStart
-                : text.length;
-
-        const afterCode = text.slice(
-            h.codeEnd,
-            end
-        );
-
-        /*
-         * 从课程代码后开始找括号。
-         */
+        const end = i + 1 < headers.length ? headers[i+1].codeStart : text.length;
+        const afterCode = text.slice(h.codeEnd, end);
         let pos = 0;
-
         const groups = [];
 
         while(pos < afterCode.length){
-
-            const index =
-                afterCode.indexOf(
-                    "(",
-                    pos
-                );
-
-            if(index < 0){
-                break;
-            }
-
-            const absolute =
-                index;
-
-            const group =
-                readBalanced(
-                    afterCode,
-                    absolute
-                );
-
-            if(!group){
-                break;
-            }
-
-            groups.push(
-                group.content.trim()
-            );
-
-            pos =
-                group.end;
+            const index = afterCode.indexOf("(", pos);
+            if(index < 0) break;
+            const group = readBalanced(afterCode, index);
+            if(!group) break;
+            groups.push(group.content.trim());
+            pos = group.end;
         }
 
-        /*
-         * groups通常是：
-         *
-         * 0 = 教师
-         * 1 = 周次+地点
-         * 2 = 另一组周次+地点
-         *
-         * 如果第一个就是周次，则没有教师。
-         */
         let teacher = "";
         let locationGroups = [];
-
         if(groups.length){
-
             const first = groups[0];
-
-            if(
-                /^\s*\d/.test(first) &&
-                first.includes(",")
-            ){
-
+            if(/^\s*\d/.test(first) && first.includes(",")){
                 locationGroups = groups;
-
-            }else{
-
+            } else {
                 teacher = first;
                 locationGroups = groups.slice(1);
             }
         }
 
-        /*
-         * 如果正常括号结构没有解析出来，
-         * 再直接从 afterCode 中寻找：
-         *
-         * (1-16,x1101...)
-         */
         if(!locationGroups.length){
-
-            const locRegex =
-                /\(\s*([0-9][^,()]*)\s*,\s*([\s\S]*?)(?=\n\s*[^\n(]+\([0-9][A-Za-z0-9]*\.[A-Za-z0-9]+\)|$)/g;
-
+            const locRegex = /\(\s*([0-9][^,()]*)\s*,\s*([\s\S]*?)(?=\n\s*[^\n(]+\([0-9A-Za-z]+|\)|$)/g;
             let lm;
-
-            while(
-                (lm = locRegex.exec(afterCode))
-            ){
-
-                locationGroups.push(
-                    `${lm[1]},${lm[2]}`
-                );
+            while((lm = locRegex.exec(afterCode))){
+                locationGroups.push(`${lm[1]},${lm[2]}`);
             }
         }
 
-        /*
-         * 一个课程可能有多个安排：
-         *
-         * (1 3-8,x1101...)
-         * (2,x1201...)
-         *
-         * 必须分别保存。
-         */
-        for(
-            const location of locationGroups
-        ){
-
-            const comma =
-                location.indexOf(",");
-
-            if(comma < 0){
-                continue;
-            }
-
-            const weekText =
-                location
-                    .slice(0,comma)
-                    .trim();
-
-            let rawRoom =
-                location
-                    .slice(comma+1)
-                    .trim();
-
-            /*
-             * 清理复制文本可能缺失/多出的括号。
-             */
-            rawRoom =
-                rawRoom
-                    .replace(/[)\]}]+$/,"")
-                    .trim();
-
-            const weeks =
-                parseWeeks(
-                    weekText
-                );
-
-            if(!weeks.length){
-                continue;
-            }
+        for(const location of locationGroups){
+            const comma = location.indexOf(",");
+            if(comma < 0) continue;
+            const weekText = location.slice(0, comma).trim();
+            let rawRoom = location.slice(comma+1).trim().replace(/[)\]}]+$/,"").trim();
+            const weeks = parseWeeks(weekText);
+            if(!weeks.length) continue;
 
             result.push({
-
-                id:
-                    `${Date.now()}_${Math.random().toString(36).slice(2)}`,
-
-                name:h.name,
-
-                code:h.code,
-
-                teacher:
-                    teacher ||
-                    "教师未设置",
-
+                id: `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+                name: h.name,
+                code: h.code,
+                teacher: teacher || "教师未分配",
                 day,
-
-                start:period,
-
-                /*
-                 * 教务系统这里的连续课，
-                 * 按两节一块显示。
-                 */
-                end:
-                    Math.min(
-                        period + 1,
-                        12
-                    ),
-
+                start: period,
+                end: Math.min(period + 1, 12),
                 weeks,
-
-                room:
-                    normalizeRoom(
-                        rawRoom
-                    ),
-
+                room: normalizeRoom(rawRoom),
                 rawRoom
-
             });
         }
     }
-
     return result;
 }
 
-
-/* =========================
-   最关键：
-   按TAB恢复7个星期列
-========================= */
-
 function parseRows(text){
-
-    const lines =
-        text
-            .replace(/\r\n/g,"\n")
-            .replace(/\r/g,"\n")
-            .split("\n");
-
+    const lines = text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n");
     const rows = [];
-
     let current = null;
-
-    /*
-     * 当前正在写入的星期列。
-     *
-     * 这比“寻找最后一个非空单元格”
-     * 准确很多。
-     */
     let currentCol = -1;
 
     for(const rawLine of lines){
+        if(rawLine.includes("课程列表:")) break;
 
-        if(
-            rawLine.includes("课程列表:")
-        ){
-            break;
-        }
-
-        const periodMatch =
-            rawLine.match(
-                /^\s*第(一|二|三|四|五|六|七|八|九|十|十一|十二)节/
-            );
-
+        const periodMatch = rawLine.match(/^\s*第(一|二|三|四|五|六|七|八|九|十|十一|十二)节/);
         if(periodMatch){
-
-            if(current){
-                rows.push(current);
-            }
-
-            const period =
-                CN_PERIOD[
-                    periodMatch[1]
-                ];
-
-            current = {
-                period,
-                cells:["","","","","","",""]
-            };
-
+            if(current) rows.push(current);
+            const period = CN_PERIOD[periodMatch[1]];
+            current = { period, cells: ["","","","","","",""] };
             currentCol = -1;
-
-            /*
-             * 第一列是“第一节”，
-             * 后面严格按照TAB对应星期。
-             */
-            const parts =
-                rawLine.split("\t");
-
-            for(
-                let i=1;
-                i<parts.length;
-                i++
-            ){
-
+            const parts = rawLine.split("\t");
+            for(let i=1; i<parts.length; i++){
                 const day = i - 1;
-
                 if(day > 6) break;
-
-                if(parts[i]){
-                    current.cells[day] =
-                        parts[i].trim();
-                }
+                if(parts[i]) current.cells[day] = parts[i].trim();
             }
-
-            currentCol =
-                Math.min(
-                    6,
-                    parts.length - 2
-                );
-
+            currentCol = Math.min(6, parts.length - 2);
             continue;
         }
 
-        if(!current){
-            continue;
-        }
-
-        /*
-         * 空行：
-         * 不改变当前列。
-         */
-        if(rawLine === ""){
-            continue;
-        }
-
-        const parts =
-            rawLine.split("\t");
-
-        /*
-         * 没有TAB：
-         *
-         * 一定是当前星期单元格的
-         * 后续文字。
-         */
+        if(!current || rawLine === "") continue;
+        const parts = rawLine.split("\t");
         if(parts.length === 1){
-
             if(currentCol >= 0){
-
-                current.cells[currentCol] +=
-                    (
-                        current.cells[currentCol]
-                            ? "\n"
-                            : ""
-                    ) +
-                    parts[0].trim();
+                current.cells[currentCol] += (current.cells[currentCol] ? "\n" : "") + parts[0].trim();
             }
-
             continue;
         }
 
-        /*
-         * 有TAB：
-         *
-         * 第一个字段属于当前列，
-         * 后面的字段依次进入后面的星期。
-         */
-        let col = currentCol;
-
+        let col = currentCol < 0 ? 0 : currentCol;
         for(const part of parts){
-
-            if(col < 0){
-                col = 0;
-            }
-
-            if(col > 6){
-                break;
-            }
-
+            if(col > 6) break;
             if(part){
-
-                current.cells[col] +=
-                    (
-                        current.cells[col]
-                            ? "\n"
-                            : ""
-                    ) +
-                    part.trim();
+                current.cells[col] += (current.cells[col] ? "\n" : "") + part.trim();
             }
-
             col++;
         }
-
-        currentCol =
-            Math.min(
-                6,
-                col - 1
-            );
+        currentCol = Math.min(6, col - 1);
     }
-
-    if(current){
-        rows.push(current);
-    }
-
+    if(current) rows.push(current);
     return rows;
 }
 
-
-/* =========================
-   主解析
-========================= */
-
 function parseSchoolSchedule(source){
+    if(!source || !source.trim()) throw new Error("输入内容为空");
+    const text = source.replace(/\u00a0/g," ").replace(/\r\n/g,"\n").replace(/\r/g,"\n");
 
-    if(
-        !source ||
-        !source.trim()
-    ){
-        throw new Error("没有课表内容");
+    if(!text.includes("星期一") || !text.includes("星期二")){
+        throw new Error("未能识别到完整的课表星期表头，请确认是否完整全选了教务网页");
     }
 
-    const text =
-        source
-            .replace(/\u00a0/g," ")
-            .replace(/\r\n/g,"\n")
-            .replace(/\r/g,"\n");
-
-    /*
-     * 必须找到课表表头。
-     */
-    if(
-        !text.includes("星期一") ||
-        !text.includes("星期二") ||
-        !text.includes("星期三") ||
-        !text.includes("星期四")
-    ){
-        throw new Error(
-            "没有找到完整课表表头"
-        );
-    }
-
-    /*
-     * 找到“节次/周次”所在位置。
-     */
-    const headerIndex =
-        text.indexOf("星期一");
-
-    /*
-     * 从课表表头附近开始，
-     * 避免把菜单里的其他内容
-     * 当成课程。
-     */
-    const scheduleText =
-        text.slice(
-            Math.max(
-                0,
-                text.lastIndexOf(
-                    "节次/周次",
-                    headerIndex
-                )
-            )
-        );
-
-    const rows =
-        parseRows(
-            scheduleText
-        );
-
+    const headerIndex = text.indexOf("星期一");
+    const scheduleText = text.slice(Math.max(0, text.lastIndexOf("节次/周次", headerIndex)));
+    const rows = parseRows(scheduleText);
     const result = [];
 
     for(const row of rows){
-
-        if(
-            !row.period ||
-            row.period < 1 ||
-            row.period > 12
-        ){
-            continue;
-        }
-
-        for(let day=1;day<=7;day++){
-
-            const cell =
-                row.cells[day-1];
-
-            if(!cell){
-                continue;
-            }
-
-            const parsed =
-                parseCell(
-                    cell,
-                    day,
-                    row.period
-                );
-
-            result.push(
-                ...parsed
-            );
+        if(!row.period || row.period < 1 || row.period > 12) continue;
+        for(let day=1; day<=7; day++){
+            const cell = row.cells[day-1];
+            if(!cell) continue;
+            result.push(...parseCell(cell, day, row.period));
         }
     }
 
-    /*
-     * 去重。
-     */
     const map = new Map();
-
     for(const course of result){
-
-        const key = [
-            course.code,
-            course.day,
-            course.start,
-            course.end,
-            course.teacher,
-            course.room,
-            course.weeks.join(",")
-        ].join("|");
-
-        if(!map.has(key)){
-            map.set(key,course);
-        }
+        const key = `${course.code}|${course.day}|${course.start}|${course.end}|${course.teacher}|${course.room}|${course.weeks.join(",")}`;
+        if(!map.has(key)) map.set(key, course);
     }
-
-    const finalCourses =
-        [...map.values()];
-
-    if(!finalCourses.length){
-        throw new Error(
-            "没有识别到课程"
-        );
-    }
-
+    const finalCourses = [...map.values()];
+    if(!finalCourses.length) throw new Error("未能解析出任何课程，请检查复制格式");
     return finalCourses;
 }
 
-
 /* =========================
-   周课程
+   渲染函数集
 ========================= */
 
 function getCoursesForWeek(week){
-
-    return courses.filter(
-        course =>
-            Array.isArray(course.weeks) &&
-            course.weeks.includes(week)
-    );
+    return courses.filter(c => Array.isArray(c.weeks) && c.weeks.includes(week));
 }
 
-
-/* =========================
-   周按钮
-========================= */
-
 function renderWeeks(){
-
-    const box =
-        document.getElementById("weeks");
-
+    const box = document.getElementById("weeks");
     box.innerHTML = "";
+    const current = getCurrentWeek();
 
-    const current =
-        getCurrentWeek();
-
-    for(let i=1;i<=18;i++){
-
-        const button =
-            document.createElement("button");
-
-        button.className =
-            "week-btn";
-
-        if(i === current){
-            button.classList.add("current");
-        }
-
-        if(i === selectedWeek){
-            button.classList.add("active");
-        }
-
-        button.textContent = i;
-
-        button.onclick = () => {
+    for(let i=1; i<=18; i++){
+        const btn = document.createElement("button");
+        btn.className = "week-btn";
+        if(i === current) btn.classList.add("current");
+        if(i === selectedWeek) btn.classList.add("active");
+        btn.textContent = i;
+        btn.onclick = () => {
             selectedWeek = i;
             renderAll();
         };
-
-        box.appendChild(button);
+        box.appendChild(btn);
     }
-
-    document.getElementById("weekText").textContent =
-        `第 ${selectedWeek} 周`;
+    document.getElementById("weekText").textContent = `第 ${selectedWeek} 周 ${selectedWeek === current ? "(当前周)" : ""}`;
 }
 
-
-/* =========================
-   日期表头
-========================= */
-
 function renderDayHeaders(){
+    const currentWeek = getCurrentWeek();
+    const todayDay = getDayNumber();
 
-    const currentWeek =
-        getCurrentWeek();
+    for(let day=1; day<=7; day++){
+        const el = document.getElementById(`dayHead${day}`);
+        const date = getDateForDay(selectedWeek, day);
+        const isToday = (selectedWeek === currentWeek && day === todayDay);
 
-    const todayDay =
-        getDayNumber();
-
-    for(let day=1;day<=7;day++){
-
-        const el =
-            document.getElementById(
-                `dayHead${day}`
-            );
-
-        const date =
-            getDateForDay(
-                selectedWeek,
-                day
-            );
-
-        const today =
-            selectedWeek === currentWeek &&
-            day === todayDay;
-
-        el.className =
-            "day-head" +
-            (
-                today
-                    ? " today"
-                    : ""
-            );
-
+        el.className = "day-head" + (isToday ? " today" : "");
         el.innerHTML = `
-            <div class="day-name">
-                ${DAY_NAMES[day-1]}
-                ${today ? " · 今天" : ""}
-            </div>
-            <span class="date">
-                ${formatDate(date)}
-            </span>
+            <div class="day-name">${DAY_NAMES[day-1]}${isToday ? " · 今" : ""}</div>
+            <span class="date">${formatDate(date)}</span>
         `;
     }
 }
 
-
-/* =========================
-   卡片
-========================= */
-
 function courseCardHTML(course){
-
-    const today =
-        selectedWeek === getCurrentWeek() &&
-        course.day === getDayNumber();
+    const isToday = selectedWeek === getCurrentWeek() && course.day === getDayNumber();
+    const theme = getCourseTheme(course.name);
 
     return `
-        <div
-            class="course-card ${today ? "today-highlight" : ""}"
-            onclick="showCourseDetail('${course.id}')"
-        >
-            <div class="course-name">
-                ${escapeHTML(course.name)}
-            </div>
-
-            <div class="course-teacher">
-                👤 ${escapeHTML(course.teacher)}
-            </div>
-
-            <div class="course-room">
-                📍 ${escapeHTML(course.room)}
+        <div class="course-card ${isToday ? "today-highlight" : ""}"
+             style="--theme-bg:${theme.bg}; --theme-border:${theme.border};"
+             onclick="showCourseDetail('${course.id}')">
+            <div class="course-name">${escapeHTML(course.name)}</div>
+            <div class="course-bottom">
+                <div class="course-teacher">👤 ${escapeHTML(course.teacher)}</div>
+                <div class="course-room">📍 ${escapeHTML(course.room)}</div>
             </div>
         </div>
     `;
 }
 
-
-/* =========================
-   课表
-========================= */
-
 function renderSchedule(){
-
-    const body =
-        document.getElementById("scheduleBody");
-
+    const body = document.getElementById("scheduleBody");
     body.innerHTML = "";
+    const weekCourses = getCoursesForWeek(selectedWeek);
+    const occupied = new Set();
 
-    const weekCourses =
-        getCoursesForWeek(
-            selectedWeek
-        );
+    for(let period=1; period<=12; period++){
+        const tr = document.createElement("tr");
 
-    const occupied =
-        new Set();
-
-    for(let period=1;period<=12;period++){
-
-        const tr =
-            document.createElement("tr");
-
-        const periodCell =
-            document.createElement("td");
-
-        periodCell.className =
-            "period-cell";
-
-        if(
-            period === 1 ||
-            period === 5 ||
-            period === 9
-        ){
-            periodCell.classList.add(
-                "part-start"
-            );
+        const periodCell = document.createElement("td");
+        periodCell.className = "period-cell";
+        if(period === 1 || period === 5 || period === 9){
+            periodCell.classList.add("part-start");
         }
-
+        const timeDef = PERIOD_TIMES[period] || { start:"", end:"" };
         periodCell.innerHTML = `
             <div class="period-num">${period}</div>
+            <div class="period-time">${timeDef.start}<br>${timeDef.end}</div>
             <div class="period-part">${getPart(period)}</div>
         `;
-
         tr.appendChild(periodCell);
 
-        for(let day=1;day<=7;day++){
+        for(let day=1; day<=7; day++){
+            const key = `${day}-${period}`;
+            if(occupied.has(key)) continue;
 
-            const key =
-                `${day}-${period}`;
-
-            if(occupied.has(key)){
-                continue;
-            }
-
-            const td =
-                document.createElement("td");
-
-            if(
-                selectedWeek === getCurrentWeek() &&
-                day === getDayNumber()
-            ){
+            const td = document.createElement("td");
+            if(selectedWeek === getCurrentWeek() && day === getDayNumber()){
                 td.classList.add("today-col");
             }
 
-            const matches =
-                weekCourses.filter(
-                    course =>
-                        course.day === day &&
-                        course.start === period
-                );
+            const matches = weekCourses.filter(c => c.day === day && c.start === period);
 
             if(matches.length){
-
-                td.innerHTML =
-                    matches
-                        .map(course =>
-                            courseCardHTML(course)
-                        )
-                        .join("");
-
-                /*
-                 * 只有一个课程时合并连续两节。
-                 */
+                td.innerHTML = matches.map(c => courseCardHTML(c)).join("");
                 if(matches.length === 1){
-
-                    const course =
-                        matches[0];
-
-                    const span =
-                        Math.min(
-                            course.end -
-                            course.start +
-                            1,
-                            12 -
-                            period +
-                            1
-                        );
-
+                    const course = matches[0];
+                    const span = Math.min(course.end - course.start + 1, 12 - period + 1);
                     if(span > 1){
-
                         td.rowSpan = span;
-
-                        for(
-                            let p=period+1;
-                            p<period+span;
-                            p++
-                        ){
-                            occupied.add(
-                                `${day}-${p}`
-                            );
+                        for(let p = period + 1; p < period + span; p++){
+                            occupied.add(`${day}-${p}`);
                         }
                     }
                 }
-
-            }else{
-
+            } else {
                 td.innerHTML = "";
             }
-
             tr.appendChild(td);
         }
-
         body.appendChild(tr);
     }
 }
 
-
-/* =========================
-   今日
-========================= */
-
 function renderToday(){
+    const list = document.getElementById("todayList");
+    const info = document.getElementById("todayInfo");
+    const now = new Date();
+    const week = getCurrentWeek();
+    const day = getDayNumber(now);
 
-    const list =
-        document.getElementById("todayList");
-
-    const info =
-        document.getElementById("todayInfo");
-
-    const now =
-        new Date();
-
-    const week =
-        getCurrentWeek();
-
-    const day =
-        getDayNumber(now);
-
-    info.textContent =
-        `${formatDate(now)} · 第${week}周 · ${DAY_NAMES[day-1]}`;
-
-    const todayCourses =
-        courses
-            .filter(
-                course =>
-                    course.day === day &&
-                    course.weeks.includes(week)
-            )
-            .sort(
-                (a,b) =>
-                    a.start - b.start
-            );
+    info.textContent = `${formatDate(now)} · 第${week}周 · ${DAY_NAMES[day-1]}`;
+    const todayCourses = courses
+        .filter(c => c.day === day && c.weeks.includes(week))
+        .sort((a,b) => a.start - b.start);
 
     if(!todayCourses.length){
-
-        list.innerHTML = `
-            <div class="today-empty">
-                🎉 今天没有安排课程
-            </div>
-        `;
-
+        list.innerHTML = `<div class="today-empty">🎉 今天没有需要上的课程，享受悠闲时光吧！</div>`;
         return;
     }
 
-    list.innerHTML =
-        todayCourses
-            .map(course => `
-                <div
-                    class="today-course"
-                    onclick="showCourseDetail('${course.id}')"
-                >
-                    <div class="today-course-name">
-                        ${escapeHTML(course.name)}
-                    </div>
-
-                    <div class="today-meta">
-                        <span class="badge">
-                            第${course.start}-${course.end}节
-                        </span>
-
-                        <span class="badge">
-                            ${getPart(course.start)}
-                        </span>
-
-                        <span class="badge">
-                            📍 ${escapeHTML(course.room)}
-                        </span>
-                    </div>
+    list.innerHTML = todayCourses.map(course => {
+        const theme = getCourseTheme(course.name);
+        const startTime = PERIOD_TIMES[course.start]?.start || "";
+        const endTime = PERIOD_TIMES[course.end]?.end || "";
+        return `
+            <div class="today-course" style="--theme-grad:${theme.bg}" onclick="showCourseDetail('${course.id}')">
+                <div class="today-course-name">${escapeHTML(course.name)}</div>
+                <div class="today-meta">
+                    <span class="badge">第${course.start}-${course.end}节 (${startTime} ~ ${endTime})</span>
+                    <span class="badge">${getPart(course.start)}</span>
+                    <span class="badge">📍 ${escapeHTML(course.room)}</span>
+                    <span class="badge">👤 ${escapeHTML(course.teacher)}</span>
                 </div>
-            `)
-            .join("");
+            </div>
+        `;
+    }).join("");
 }
 
-
-/* =========================
-   刷新
-========================= */
-
 function renderAll(){
-
     renderWeeks();
     renderDayHeaders();
     renderSchedule();
     renderToday();
 }
 
-
-/* =========================
-   今天
-========================= */
-
 function goToday(){
-
-    selectedWeek =
-        getCurrentWeek();
-
+    selectedWeek = getCurrentWeek();
     renderAll();
+    showToast("已定位至今天");
 }
 
-
 /* =========================
-   导入
+   日历与数据导入导出
 ========================= */
 
 function openImportModal(){
-
-    document
-        .getElementById("importModal")
-        .classList.add("show");
+    document.getElementById("importModal").classList.add("show");
 }
 
-
 function importScheduleText(){
-
-    const input =
-        document.getElementById(
-            "scheduleInput"
-        );
-
-    const text =
-        input.value;
-
+    const input = document.getElementById("scheduleInput");
+    const text = input.value;
     if(!text.trim()){
-
         showToast("请先粘贴课表");
-
         return;
     }
 
     try{
-
-        const parsed =
-            parseSchoolSchedule(
-                text
-            );
-
-        const uniqueNames =
-            new Set(
-                parsed.map(
-                    x => x.code
-                )
-            );
-
-        /*
-         * 正常应该识别到14门课程。
-         *
-         * 少于3门直接拒绝覆盖。
-         */
-        if(uniqueNames.size < 3){
-
-            throw new Error(
-                `只识别到 ${uniqueNames.size} 门课程，已取消导入`
-            );
+        const parsed = parseSchoolSchedule(text);
+        const uniqueNames = new Set(parsed.map(x => x.name));
+        if(uniqueNames.size < 2){
+            throw new Error(`只识别到 ${uniqueNames.size} 门课程，取消覆盖以免误删`);
         }
-
         courses = parsed;
-
         saveData();
-
-        selectedWeek =
-            getCurrentWeek();
-
+        selectedWeek = getCurrentWeek();
         renderAll();
-
         closeModal("importModal");
-
-        showToast(
-            `已识别 ${uniqueNames.size} 门课程`
-        );
-
-    }catch(error){
-
-        console.error(error);
-
-        showToast(
-            error.message ||
-            "解析失败"
-        );
+        showToast(`成功解析导入 ${uniqueNames.size} 门科目！`);
+    } catch(err){
+        showToast(err.message || "课表解析异常");
     }
 }
 
+function exportICS(){
+    if(!courses.length){
+        showToast("当前暂无课程可导出");
+        return;
+    }
 
-/* =========================
-   备份
-========================= */
+    const pad = n => String(n).padStart(2, '0');
+    const formatICSDate = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
 
-function exportJSON(){
+    let ics = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//MySchedule//CN",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        "X-WR-CALNAME:大学课程表",
+        "X-WR-TIMEZONE:Asia/Shanghai"
+    ];
 
-    const data = {
-        version:8,
-        semesterStart:"2026-09-01",
-        semester:"2026-2027学年1学期",
-        courses
-    };
+    courses.forEach(course => {
+        course.weeks.forEach(w => {
+            const courseDate = getDateForDay(w, course.day);
+            const startTimeStr = PERIOD_TIMES[course.start]?.start || "08:00";
+            const endTimeStr = PERIOD_TIMES[course.end]?.end || "09:40";
 
-    const blob =
-        new Blob(
-            [
-                JSON.stringify(
-                    data,
-                    null,
-                    2
-                )
-            ],
-            {
-                type:"application/json"
-            }
-        );
+            const [sH, sM] = startTimeStr.split(":").map(Number);
+            const [eH, eM] = endTimeStr.split(":").map(Number);
 
-    const url =
-        URL.createObjectURL(blob);
+            const startDt = new Date(courseDate.getFullYear(), courseDate.getMonth(), courseDate.getDate(), sH, sM, 0);
+            const endDt = new Date(courseDate.getFullYear(), courseDate.getMonth(), courseDate.getDate(), eH, eM, 0);
 
-    const a =
-        document.createElement("a");
+            ics.push(
+                "BEGIN:VEVENT",
+                `UID:${course.id}_W${w}@myschedule.local`,
+                `DTSTAMP:${formatICSDate(new Date())}Z`,
+                `DTSTART:${formatICSDate(startDt)}`,
+                `DTEND:${formatICSDate(endDt)}`,
+                `SUMMARY:${course.name}`,
+                `LOCATION:${course.room}`,
+                `DESCRIPTION:教师: ${course.teacher}\\n第 ${w} 周 第 ${course.start}-${course.end} 节`,
+                "END:VEVENT"
+            );
+        });
+    });
 
+    ics.push("END:VCALENDAR");
+
+    const blob = new Blob([ics.join("\r\n")], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
     a.href = url;
-
-    a.download =
-        "我的课表备份.json";
-
+    a.download = `课程表_导出.ics`;
     a.click();
-
     URL.revokeObjectURL(url);
-
-    showToast("备份已导出");
+    showToast("已生成系统日历文件(.ics)");
 }
 
+function exportJSON(){
+    const data = {
+        version: 9,
+        semesterStart: SEMESTER_START_STR,
+        courses
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "我的课表备份.json";
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast("备份文件已导出");
+}
 
 function importJSON(event){
-
-    const file =
-        event.target.files[0];
-
+    const file = event.target.files[0];
     if(!file) return;
-
-    const reader =
-        new FileReader();
-
+    const reader = new FileReader();
     reader.onload = function(){
-
         try{
-
-            const data =
-                JSON.parse(
-                    reader.result
-                );
-
-            if(
-                !data ||
-                !Array.isArray(data.courses)
-            ){
-                throw new Error(
-                    "备份格式错误"
-                );
+            const data = JSON.parse(reader.result);
+            if(!data || !Array.isArray(data.courses)){
+                throw new Error("备份格式错误，缺少 courses 字段");
             }
-
-            courses =
-                data.courses;
-
+            courses = data.courses;
+            if(data.semesterStart) SEMESTER_START_STR = data.semesterStart;
             saveData();
-
-            selectedWeek =
-                getCurrentWeek();
-
+            selectedWeek = getCurrentWeek();
             renderAll();
-
-            showToast("备份恢复成功");
-
-        }catch(error){
-
-            showToast(
-                "恢复失败：" +
-                error.message
-            );
+            showToast("备份恢复成功！");
+        } catch(e){
+            showToast("恢复失败: " + e.message);
         }
     };
-
     reader.readAsText(file);
-
     event.target.value = "";
 }
 
-
 /* =========================
-   存储
+   数据持久化与设置
 ========================= */
 
 function saveData(){
-
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-            version:8,
-            courses
-        })
-    );
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        version: 9,
+        semesterStart: SEMESTER_START_STR,
+        courses
+    }));
 }
-
 
 function loadData(){
-
     try{
-
-        const raw =
-            localStorage.getItem(
-                STORAGE_KEY
-            );
-
+        const raw = localStorage.getItem(STORAGE_KEY);
         if(!raw) return;
-
-        const data =
-            JSON.parse(raw);
-
-        if(
-            data &&
-            Array.isArray(data.courses)
-        ){
-            courses =
-                data.courses;
+        const data = JSON.parse(raw);
+        if(data && Array.isArray(data.courses)){
+            courses = data.courses;
+            if(data.semesterStart) SEMESTER_START_STR = data.semesterStart;
         }
-
-    }catch(error){
-
-        console.error(error);
+    } catch(err){
+        console.error(err);
     }
 }
-
-
-/* =========================
-   课程详情
-========================= */
 
 function showCourseDetail(id){
-
-    const course =
-        courses.find(
-            x =>
-                String(x.id) ===
-                String(id)
-        );
-
+    const course = courses.find(x => String(x.id) === String(id));
     if(!course) return;
 
-    const date =
-        getDateForDay(
-            selectedWeek,
-            course.day
-        );
+    const date = getDateForDay(selectedWeek, course.day);
+    const timeStart = PERIOD_TIMES[course.start]?.start || "";
+    const timeEnd = PERIOD_TIMES[course.end]?.end || "";
 
-    document.getElementById(
-        "courseDetail"
-    ).innerHTML = `
-
+    document.getElementById("courseDetail").innerHTML = `
         <div class="detail-item">
-            <div class="detail-label">课程</div>
+            <div class="detail-label">课程名称</div>
+            <div class="detail-value" style="font-weight:900;font-size:16px;">${escapeHTML(course.name)}</div>
+        </div>
+        <div class="detail-item">
+            <div class="detail-label">授课教师</div>
+            <div class="detail-value">👤 ${escapeHTML(course.teacher)}</div>
+        </div>
+        <div class="detail-item">
+            <div class="detail-label">上课地点</div>
+            <div class="detail-value">📍 ${escapeHTML(course.room)}</div>
+        </div>
+        <div class="detail-item">
+            <div class="detail-label">星期与时间</div>
             <div class="detail-value">
-                ${escapeHTML(course.name)}
+                ${DAY_NAMES[course.day-1]} 第${course.start}-${course.end}节 (${timeStart} ~ ${timeEnd})
             </div>
         </div>
-
+        <div class="detail-item">
+            <div class="detail-label">当前选定周对应公历日期</div>
+            <div class="detail-value">${formatDate(date)}</div>
+        </div>
+        <div class="detail-item">
+            <div class="detail-label">开课周次</div>
+            <div class="detail-value">${course.weeks.join(", ")} 周</div>
+        </div>
         <div class="detail-item">
             <div class="detail-label">课程代码</div>
-            <div class="detail-value">
-                ${escapeHTML(course.code)}
-            </div>
-        </div>
-
-        <div class="detail-item">
-            <div class="detail-label">教师</div>
-            <div class="detail-value">
-                ${escapeHTML(course.teacher)}
-            </div>
-        </div>
-
-        <div class="detail-item">
-            <div class="detail-label">星期</div>
-            <div class="detail-value">
-                ${DAY_NAMES[course.day-1]}
-            </div>
-        </div>
-
-        <div class="detail-item">
-            <div class="detail-label">节次</div>
-            <div class="detail-value">
-                第${course.start}-${course.end}节 · ${getPart(course.start)}
-            </div>
-        </div>
-
-        <div class="detail-item">
-            <div class="detail-label">日期</div>
-            <div class="detail-value">
-                ${formatDate(date)}
-            </div>
-        </div>
-
-        <div class="detail-item">
-            <div class="detail-label">教学周</div>
-            <div class="detail-value">
-                ${course.weeks.join("、")} 周
-            </div>
-        </div>
-
-        <div class="detail-item">
-            <div class="detail-label">地点</div>
-            <div class="detail-value">
-                📍 ${escapeHTML(course.room)}
-            </div>
+            <div class="detail-value">${escapeHTML(course.code || "无")}</div>
         </div>
     `;
-
-    document
-        .getElementById("detailModal")
-        .classList.add("show");
+    document.getElementById("detailModal").classList.add("show");
 }
-
-
-/* =========================
-   设置
-========================= */
 
 function openSettings(){
-
-    document
-        .getElementById("settingsModal")
-        .classList.add("show");
+    document.getElementById("semesterStartInput").value = SEMESTER_START_STR;
+    document.getElementById("settingsModal").classList.add("show");
 }
 
-
-function closeModal(id){
-
-    document
-        .getElementById(id)
-        .classList.remove("show");
+function saveSettings(){
+    const input = document.getElementById("semesterStartInput").value;
+    if(input){
+        SEMESTER_START_STR = input;
+        saveData();
+        renderAll();
+        closeModal("settingsModal");
+        showToast("设置已保存更新");
+    }
 }
-
-
-document
-    .querySelectorAll(".modal-mask")
-    .forEach(modal => {
-
-        modal.addEventListener(
-            "click",
-            event => {
-
-                if(
-                    event.target === modal
-                ){
-                    modal.classList.remove(
-                        "show"
-                    );
-                }
-            }
-        );
-    });
-
-
-/* =========================
-   清空
-========================= */
 
 function clearAllData(){
-
-    if(
-        !confirm(
-            "确定清空当前课表吗？"
-        )
-    ){
-        return;
-    }
-
+    if(!confirm("确定清空全部课表数据吗？此操作无法撤销！")) return;
     courses = [];
-
-    localStorage.removeItem(
-        STORAGE_KEY
-    );
-
+    localStorage.removeItem(STORAGE_KEY);
     renderAll();
-
-    closeModal(
-        "settingsModal"
-    );
-
-    showToast("课表已清空");
+    closeModal("settingsModal");
+    showToast("课表数据已清空");
 }
 
+function closeModal(id){
+    document.getElementById(id).classList.remove("show");
+}
 
-/* =========================
-   Toast
-========================= */
+document.querySelectorAll(".modal-mask").forEach(modal => {
+    modal.addEventListener("click", event => {
+        if(event.target === modal) modal.classList.remove("show");
+    });
+});
 
 let toastTimer;
-
 function showToast(message){
-
-    const toast =
-        document.getElementById(
-            "toast"
-        );
-
-    toast.textContent =
-        message;
-
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
     toast.classList.add("show");
-
     clearTimeout(toastTimer);
-
-    toastTimer =
-        setTimeout(
-            () => {
-                toast.classList.remove(
-                    "show"
-                );
-            },
-            3000
-        );
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
 }
 
-
-/* =========================
-   初始化
-========================= */
-
+// 初始化
 loadData();
-
-selectedWeek =
-    getCurrentWeek();
-
+selectedWeek = getCurrentWeek();
 renderAll();
 
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        if(event.key === "Escape"){
-
-            document
-                .querySelectorAll(
-                    ".modal-mask.show"
-                )
-                .forEach(
-                    x =>
-                        x.classList.remove(
-                            "show"
-                        )
-                );
-        }
+document.addEventListener("keydown", event => {
+    if(event.key === "Escape"){
+        document.querySelectorAll(".modal-mask.show").forEach(x => x.classList.remove("show"));
     }
-);
-
+});
 </script>
 
 </body>
